@@ -1,0 +1,21 @@
+@import url(../../../css-1);
+@import url(../../../css-2);
+
+*{
+    --title-font: "EB Garamond";
+    --title-font-color: #404040;
+    --body-font: "Inter";
+    --body-font-size: 15px;
+}
+
+section{
+    background: #f5f5f5;
+}
+
+#mainmenu{
+    font-family: var(--body-font);
+}
+
+.de_testi.opt-2 blockquote{
+    background: #ffffff !important;
+}

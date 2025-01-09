@@ -13,9 +13,6 @@ Centers
       <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
           <h4 class="card-title">Centers</h4>
-          <!-- <a href="{{route('admin.courses.create')}}" class="btn btn-primary">
-            <i class="fas fa-plus"></i> New
-          </a> -->
           <a href="{{route('admin.center.create')}}"  class="btn btn-rounded btn-danger"><span
                                         class="btn-icon-start text-info"><i class="fa fa-plus color-danger"></i>
                                     </span>Add</a>
@@ -30,11 +27,10 @@ Centers
                   <th>Center Code</th>
                   <th>Institute Name</th>
                   <th>Director</th>
+                  <th>Certificate</th>
                   <th>Mobile No</th>
                   <th>Address</th>
                   <th>State</th>
-                  <th>Area</th>
-                  <th>Password</th>
                   <th>Date</th>
                   <th>Status</th>
                   <th>Action</th>
@@ -47,21 +43,30 @@ Centers
                   <td>{{ $center->center_code }}</td>
                   <td>{{ $center->institute_name }}</td>
                   <td>{{ $center->director }}</td>
+                  <td>{{ $center->certificate }}</td>
                   <td>{{ $center->mobile }}</td>
                   <td>{{ $center->address }}</td>
                   <td>{{ $center->state }}</td>
-                  <td>{{ $center->centre_area }}</td>
-                  <td>{{ $center->password }}</td>
                   <td>{{ $center->date }}</td>
-                  <td>{{ $center->status }}</td>
+                  <td>
+                    <div class="mb-3 col-md-12">
+                        <select id="inputState" class="default-select form-control wide change-status" name="status" data-id="{{ $center->id }}">
+                            <option value="pending" {{ old('status', $center->status ?? 'pending') === 'pending' ? 'selected' : '' }}>Pending</option>
+                            <option value="active" {{ old('status', $center->status ?? 'pending') === 'active' ? 'selected' : '' }}>Active</option>
+                            <option value="inactive" {{ old('status', $center->status ?? 'pending') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                        </select>
+                    </div>
+                  </td>
+
+                  
                   <td>
                     <div class="d-flex">
                       <!-- Edit Button -->
-                      <a href="{{ route('admin.center.edit', $center->apply_id ) }}" class="btn btn-primary shadow btn-sm me-2" title="Edit Course">
+                      <a href="{{ route('admin.center.edit', $center->id ) }}" class="btn btn-primary shadow btn-sm me-2" title="Edit Course">
                         <i class="fas fa-edit fs-7"></i>
                       </a>
                       <!-- Delete Button -->
-                      <a href="{{ route('admin.center.destroy', $center->apply_id ) }}" class="btn btn-danger shadow btn-sm delete-item" title="Delete Course">
+                      <a href="{{ route('admin.center.destroy', $center->id ) }}" class="btn btn-danger shadow btn-sm delete-item" title="Delete Course">
                         <i class="fas fa-trash-alt fs-7"></i>
                       </a>
                       </form>
@@ -81,3 +86,20 @@ Centers
 
 </div>
 @endsection
+@push('script')
+<script>
+    $(document).ready(function(){
+        $('body').on('change', '.change-status', function(){
+            let selectedStatus = $(this).val();
+            let id = $(this).data('id'); 
+            $.ajax({
+                url: "{{ route('admin.center.change-status') }}",
+                method: 'PUT',
+                data: { status: selectedStatus, id: id },
+                success: () => Swal.fire('Success', 'Status has been updated!', 'success'),
+                error: () => Swal.fire('Error', 'Failed to update status.', 'error')
+            });
+        });
+    });
+</script>
+@endpush

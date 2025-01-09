@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\Backend\AdminController;
+use App\Http\Controllers\Backend\AdmissionController;
 use App\Http\Controllers\Backend\CoursesController;
 use App\Http\Controllers\Backend\UserProfileController;
 use App\Http\Controllers\Backend\CenterController;
@@ -23,4 +24,9 @@ Route::post('profile/update-password', [UserProfileController::class, 'updatePas
 
 
 Route::resource('courses', CoursesController::class);
+Route::put('center/change-status', [CenterController::class, 'changeStatus'])->name('center.change-status');
 Route::resource('center', CenterController::class);
+
+
+Route::put('admission/change-status', [AdmissionController::class, 'changeStatus'])->name('admission.change-status');
+Route::resource('admission', AdmissionController::class);

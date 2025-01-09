@@ -12,10 +12,10 @@ Dashboard
     <div class="col-12">
       <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-          <h4 class="card-title">Courses</h4>
-          <a href="{{route('admin.courses.create')}}" class="btn btn-primary">
-            <i class="fas fa-plus"></i> New
-          </a>
+          <h3 class="card-title">Courses</h3>
+          <a href="{{route('admin.courses.create')}}"  class="btn btn-rounded btn-danger"><span
+                                        class="btn-icon-start text-info"><i class="fa fa-plus color-danger"></i>
+                                    </span>Add</a>
         </div>
 
         <div class="card-body">
@@ -24,7 +24,7 @@ Dashboard
               <thead>
                 <tr>
                   <th>SI.NO</th>
-                  <th>Course Title</th>
+                  <th>Category</th>
                   <th>Course Name</th>
                   <th>Duration</th>
                   <th>Mode</th>
@@ -37,12 +37,12 @@ Dashboard
                 @foreach ($courses as $key => $course)
                 <tr>
                   <td>{{ $key + 1 }}</td>
-                  <td>{{ $course->course_title }}</td>
-                  <td>{{ $course->course_name }}</td>
+                  <td>{{ $course->parent ? $course->parent->name : 'No Parent' }}</td>
+                  <td>{{ $course->name }}</td>
                   <td>{{ $course->duration }}</td>
                   <td>{{ $course->mode }}</td>
                   <td>{{ $course->eligibility }}</td>
-                  <td>{{ $course->course_fees }}</td>
+                  <td>{{ $course->fees }}</td>
                   <td>
                     <div class="d-flex">
                       <!-- Edit Button -->

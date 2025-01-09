@@ -30,6 +30,9 @@ return new class extends Migration
             $table->date('date')->nullable(); 
             $table->string('pincode'); 
             $table->string('website')->nullable();
+            $table->string('password')->nullable();
+            $table->string('certificate')->nullable(); // New column
+             $table->string('certificateImage')->nullable(); // New column
             $table->timestamps(); 
         });
     }

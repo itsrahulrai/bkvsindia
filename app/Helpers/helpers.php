@@ -2,6 +2,39 @@
 
 use App\Models\Center;
 
+
+
+if (!function_exists('centerCode')) {
+    /**
+     * Generate a unique sequential center code with the prefix 'BKVS'.
+     *
+     * @return string
+     */
+    function centerCode()
+    {
+        // Retrieve the last center code from the database
+        $lastCode = Center::latest('id')->value('center_code');
+
+        // Extract the numeric part from the last center code
+        if ($lastCode) {
+            // Extract the numeric part, after 'BKVS'
+            $lastNumber = intval(substr($lastCode, 4)); // Remove 'BKVS' and convert to an integer
+        } else {
+            $lastNumber = 99; // Start from 100 if no center code exists
+        }
+
+        // Increment the number and generate a new center code with proper padding
+        $newNumber = $lastNumber + 1;
+        $newCode = 'BKVS' . str_pad($newNumber, 3, '0', STR_PAD_LEFT); // Ensure 3 digits are used
+
+        return $newCode;
+    }
+}
+
+
+
+
+
 if (!function_exists('getInterestDetails')) {
     /**
      * Get the details for an interest.
@@ -72,32 +105,6 @@ if (!function_exists('getEducationDisplay')) {
         ];
 
         return $educationDetails[$education] ?? $education;
-    }
-}
-
-if (!function_exists('centerCode')) {
-    /**
-     * Generate a unique sequential center code with the prefix 'BKV'.
-     *
-     * @return string
-     */
-    function centerCode()
-    {
-        // Retrieve the last center code from the database
-        $lastCode = Center::latest('id')->value('center_code');
-
-        // Extract the numeric part from the last center code
-        if ($lastCode) {
-            $lastNumber = intval(substr($lastCode, 3)); // Remove 'BKVS' and convert to an integer
-        } else {
-            $lastNumber = 99; // Start from 100 if no center code exists
-        }
-
-        // Increment the number and generate a new center code
-        $newNumber = $lastNumber + 1;
-        $newCode = 'BKVS' . $newNumber;
-
-        return $newCode;
     }
 }
 

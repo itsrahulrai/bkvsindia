@@ -26,6 +26,15 @@ class Center extends Model
         'status',
         'date',
         'pincode',
-        'website'
+        'website',
+        'password',
+        'certificate',
+        'certificateImage'
     ];
+
+     // Define relationship with Admissions
+     public function admissions()
+     {
+         return $this->hasMany(Admission::class);
+     }
 }

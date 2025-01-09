@@ -1,5 +1,5 @@
 <div class="nav-header">
-    <a href="index.html" class="brand-logo">
+    <a href="{{route('home')}}" class="brand-logo">
         <img src="{{asset('assets/admin/images/bkvsindia.png')}}" alt="My Logo" class="custom-logo" width="150" height="70" />
     </a>
     <div class="nav-control">

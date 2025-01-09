@@ -3,7 +3,7 @@
 
 <head>
 	<!-- Title -->
-	<title>Login - BKVS INDIA</title>
+    <title>@yield('title') </title>
 	<!-- Meta -->
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -35,11 +35,14 @@
 	<link href="{{asset('assets/admin/vendor/jquery-nice-select/css/nice-select.css')}}" rel="stylesheet">
 	
 	<!-- Toastr CSS -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
-
+     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+       <!-- Include Dropify CSS -->
+       <link href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.min.css" rel="stylesheet">
 
         <!-- SweetAlert2 CSS -->
-				<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+         
 </head>
 
 <body>
@@ -281,6 +284,24 @@
         });
     </script>
 
+     <!-- Include Dropify JS -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js"></script>
+    <script>
+        function deleteConfirm() {
+            return confirm('Are you sure you want to delete this item?');
+        }
+        $('.dropify').dropify();
+
+        // Used events
+        var drEvent = $('.dropify-event').dropify();
+        drEvent.on('dropify.beforeClear', function(event, element) {
+            return confirm("Do you really want to delete \"" + element.file.name + "\" ?");
+        });
+        drEvent.on('dropify.afterClear', function(event, element) {
+            alert('File deleted');
+        });
+    </script>
+@stack('script')
 </body>
 
 </html>

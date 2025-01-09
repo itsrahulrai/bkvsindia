@@ -4,18 +4,19 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Center;
-use App\Models\CenterApply;
 use Illuminate\Http\Request;
+use App\Traits\ImageUploadTrait;
 use Illuminate\Support\Facades\Log;
 
 class CenterController extends Controller
 {
+    use ImageUploadTrait;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $centers = CenterApply::latest()->paginate(100); 
+        $centers = Center::latest()->paginate(100); 
         return view('admin.centers.index',compact('centers'));
     }
 
@@ -31,55 +32,55 @@ class CenterController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-public function store(Request $request)
-{
-    $request->validate([
-        'institute_name' => 'required',
-        'director' => 'required',
-        'phone' => 'required|numeric|digits:10',
-        'mobile' => 'required|numeric|digits:10',
-        'email' => 'required|email',
-        'state' => 'required|string',
-        'city' => 'required|string|max:100',
-        'pincode' => 'required|numeric|digits:6',
-        'website' => 'nullable|url', // Optional website validation
-    ]);
-    
-    try {
-        // Generate a unique center code
-        $centerCode = centerCode(); 
-        
-        // Create the center
-        $center = Center::create([
-            'institute_name' => $request->institute_name,
-            'director' => $request->director,
-            'phone' => $request->phone,
-            'mobile' => $request->mobile,
-            'website' => $request->website,
-            'email' => $request->email,
-            'state' => $request->state,
-            'city' => $request->city,
-            'pincode' => $request->pincode,
-            'address' => $request->address,
-            'message' => $request->message,
-            'status' => 'pending', // Ensure status is set as 'pending'
-            'center_code' => $centerCode, // Assign the generated center code
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'institute_name' => 'required',
+            'director' => 'required',
+            'phone' => 'required|numeric|digits:10',
+            'mobile' => 'required|numeric|digits:10',
+            'email' => 'required|email',
+            'state' => 'required|string',
+            'city' => 'required|string|max:100',
+            'pincode' => 'required|numeric|digits:6',
+            'website' => 'nullable|url',
         ]);
         
-        session()->flash('success', 'Center created successfully!');
-        return redirect()->back();
-    } catch (\Exception $e) {
-        Log::error('Error creating Center: ' . $e->getMessage());
-        return redirect()->back()->withErrors('Error creating Center: ' . $e->getMessage());
+        try {
+            $centerCode = centerCode(); 
+            $hashedPassword = bcrypt($request->mobile); 
+            $photoPath = $this->uploadImage($request, 'certificateImage', 'uploads/images');
+             Center::create([
+                'institute_name' => $request->institute_name,
+                'director' => $request->director,
+                'phone' => $request->phone,
+                'mobile' => $request->mobile,
+                'website' => $request->website,
+                'email' => $request->email,
+                'state' => $request->state,
+                'city' => $request->city,
+                'pincode' => $request->pincode,
+                'address' => $request->address,
+                'address1' => $request->address1,
+                'number_of_lab_rooms' => $request->number_of_lab_rooms,
+                'space_available' => $request->space_available,
+                'certificate' => $request->certificate,
+                'certificateImage' => $photoPath,
+                'date' => $request->date,
+                'message' => $request->message,
+                'status' => 'pending',
+                'center_code' => $centerCode,
+                'password' => $hashedPassword,
+            ]);
+            
+            session()->flash('success', 'Center created successfully!');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            Log::error('Error creating Center: ' . $e->getMessage());
+            return redirect()->back()->withErrors('Error creating Center: ' . $e->getMessage());
+        }
     }
-}
-
-
-
-
-
-
-
 
 
     /**
@@ -95,10 +96,7 @@ public function store(Request $request)
      */
     public function edit(string $id)
     {
-        
-
-        $centers = CenterApply::where('apply_id', $id)->first();
-        // dd($centers);
+        $centers = Center::where('id', $id)->first();
         return view('admin.centers.create', compact('centers'));
                 
     }
@@ -106,54 +104,75 @@ public function store(Request $request)
     /**
      * Update the specified resource in storage.
      */
-public function update(Request $request, string $id)
-{
-    // dd($id);
-
-    $request->validate([
-        'institute_name' => 'required',
-        'director' => 'required',
-        'phone' => 'required|numeric|digits:10',
-        'mobile' => 'required|numeric|digits:10',
-        'website' => 'required|url',
-        'email' => 'required|email',
-        'state' => 'required|string',
-        'city' => 'required|string|max:100',
-        'pincode' => 'required|numeric|digits:6'
-    ]);
-
-    try {
-        $center = CenterApply::where('apply_id', $id)->firstOrFail();
-        // dd($center);
-        $center->update([
-            'institute_name' => $request->institute_name,
-            'director' => $request->director,
-            'phone' => $request->phone,
-            'mobile' => $request->mobile,
-            'website' => $request->website,
-            'email' => $request->email,
-            'state' => $request->state,
-            'city' => $request->city,
-            'pincode' => $request->pincode,
-            'address' => $request->address,
-            'message' => $request->message,
-            'status' => 1,
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'institute_name' => 'required',
+            'director' => 'required',
+            'phone' => 'required|numeric|digits:10',
+            'mobile' => 'required|numeric|digits:10',
+            'email' => 'required|email',
+            'state' => 'required|string',
+            'city' => 'required|string|max:100',
+            'pincode' => 'required|numeric|digits:6',
+            'website' => 'nullable|url',
         ]);
-
-        session()->flash('success', 'Center updated successfully!');
-        return redirect()->route('admin.center.index');
-    } catch (\Exception $e) {
-        Log::error('Error updating Center: ' . $e->getMessage());
-        return redirect()->back()->with('error', 'There was an error updating the center.');
+        try {
+            $center = Center::findOrFail($id);
+            $hashedPassword = $request->has('mobile') ? bcrypt($request->mobile) : $center->password;
+            $photoPath = $this->uploadImage($request, 'certificateImage', 'uploads/images');
+            $center->update([
+                'institute_name' => $request->institute_name,
+                'director' => $request->director,
+                'phone' => $request->phone,
+                'mobile' => $request->mobile,
+                'website' => $request->website,
+                'email' => $request->email,
+                'state' => $request->state,
+                'city' => $request->city,
+                'pincode' => $request->pincode,
+                'address' => $request->address,
+                'address1' => $request->address1,
+                'certificate' => $request->certificate,
+                'certificateImage' => $photoPath,
+                'number_of_lab_rooms' => $request->number_of_lab_rooms,
+                'space_available' => $request->space_available,
+                'date' => $request->date,
+                'message' => $request->message,
+                'status' => $request->status,
+                'password' => $hashedPassword, 
+            ]);
+            
+            session()->flash('success', 'Center updated successfully!');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            Log::error('Error updating Center: ' . $e->getMessage());
+            return redirect()->back()->withErrors('Error updating Center: ' . $e->getMessage());
+        }
     }
-}
+    
 
 
     /**
      * Remove the specified resource from storage.
-     */
+     */ 
     public function destroy(string $id)
     {
-        //
+        $center = center::findOrFail($id); 
+        $center->delete();
+        return response(['status' => 'success', 'message' => 'Deleted Successfully!']);
     }
+
+     /**
+     * Status Change.
+     */
+    public function changeStatus(Request $request)
+    {
+        $center = Center::findOrFail($request->id);
+        $center->status = $request->status; 
+        $center->save();
+        
+        return response(['message' => 'Status has been updated!']);
+    }
+    
 }

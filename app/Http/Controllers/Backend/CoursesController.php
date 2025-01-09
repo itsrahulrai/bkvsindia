@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
-use App\Models\CourseName;
+use App\Models\Course;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CoursesController extends Controller
 {
@@ -13,17 +14,19 @@ class CoursesController extends Controller
      */
     public function index()
     {
-        $courses = CourseName::latest()->get();
+        // $courses = Course::whereNotNull('parent_id')->latest()->get();
+
+        $courses = Course::latest()->get();
         return view('admin.courses.index', compact('courses'));
     }
-
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        return view('admin.courses.create');
+        $courses = Course::whereNull('parent_id')->latest()->get();
+        return view('admin.courses.create', compact('courses'));
     }
 
     /**
@@ -32,23 +35,30 @@ class CoursesController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'course_title' => 'required',
-            'course_name' => 'required',
+            'parent_id' => 'required',
+            'name' => 'required',
             'duration' => 'required|numeric',
             'mode' => 'required',
             'eligibility' => 'required',
-            'course_fees' => 'required|numeric',
+            'fees' => 'required|numeric',
         ]);
-        CourseName::create([
-            'course_title' => $request->course_title,
-            'course_name' => $request->course_name,
-            'duration' => $request->duration,
-            'mode' => $request->mode,
-            'eligibility' => $request->eligibility,
-            'course_fees' => $request->course_fees,
-        ]);
-        session()->flash('success', 'Course created successfully!');
-        return redirect()->back();
+
+        try {
+            Course::create([
+                'parent_id' => $request->parent_id,
+                'name' => $request->name,
+                'duration' => $request->duration,
+                'mode' => $request->mode,
+                'eligibility' => $request->eligibility,
+                'fees' => $request->fees,
+            ]);
+            session()->flash('success', 'Course created successfully!');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            Log::error('Error updating Center: ' . $e->getMessage());
+            return redirect()->back()->withErrors('Error updating Center: ' . $e->getMessage());
+        }
+
     }
 
     /**
@@ -64,8 +74,9 @@ class CoursesController extends Controller
      */
     public function edit(string $id)
     {
-        $course = CourseName::findorFail($id);
-        return view('admin.courses.create', compact('course'));
+        $course = Course::findOrFail($id);
+        $courses = Course::whereNull('parent_id')->latest()->get();
+        return view('admin.courses.create', compact('course', 'courses'));
     }
 
     /**
@@ -74,34 +85,40 @@ class CoursesController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'course_title' => 'required',
-            'course_name' => 'required',
+            'parent_id' => 'required',
+            'name' => 'required',
             'duration' => 'required|numeric',
             'mode' => 'required',
             'eligibility' => 'required',
-            'course_fees' => 'required|numeric',
+            'fees' => 'required|numeric',
         ]);
-       $course = CourseName::findOrFail($id);
+
+        try {
+            $course = Course::findOrFail($id);
             $course->update([
-            'course_title' => $request->course_title,
-            'course_name' => $request->course_name,
-            'duration' => $request->duration,
-            'mode' => $request->mode,
-            'eligibility' => $request->eligibility,
-            'course_fees' => $request->course_fees,
-        ]);
-        
-        session()->flash('success', 'Course updated successfully!');
-        return redirect()->back();
+                'parent_id' => $request->parent_id,
+                'name' => $request->name,
+                'duration' => $request->duration,
+                'mode' => $request->mode,
+                'eligibility' => $request->eligibility,
+                'fees' => $request->fees,
+            ]);
+
+            session()->flash('success', 'Course updated successfully!');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            Log::error('Error updating Center: ' . $e->getMessage());
+            return redirect()->back()->withErrors('Error updating Center: ' . $e->getMessage());
+        }
+
     }
-    
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        $course = CourseName::findOrFail($id); 
+        $course = Course::findOrFail($id);
         $course->delete();
         return response(['status' => 'success', 'message' => 'Deleted Successfully!']);
     }

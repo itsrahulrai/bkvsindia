@@ -4,6 +4,7 @@ use App\Http\Controllers\Backend\AdmissionController;
 use App\Http\Controllers\Backend\CoursesController;
 use App\Http\Controllers\Backend\UserProfileController;
 use App\Http\Controllers\Backend\CenterController;
+use App\Http\Controllers\Backend\SubjectController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -30,3 +31,7 @@ Route::resource('center', CenterController::class);
 
 Route::put('admission/change-status', [AdmissionController::class, 'changeStatus'])->name('admission.change-status');
 Route::resource('admission', AdmissionController::class);
+
+
+Route::put('subject/change-status', [SubjectController::class, 'changeStatus'])->name('subject.change-status');
+Route::resource('subject', SubjectController::class);

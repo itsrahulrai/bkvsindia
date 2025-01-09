@@ -6,21 +6,21 @@
 							<span class="nav-text">Dashboard</span>
 						</a>
                     </li>
-                    <li><a href="{{route('admin.courses.index')}}" aria-expanded="false">
+                    <!-- <li><a href="{{route('admin.courses.index')}}" aria-expanded="false">
 						<i class="flaticon-050-info"></i>
 							<span class="nav-text">Courses</span>
 						</a>
                        
-                    </li>
-                    <!-- <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                    </li> -->
+                    <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
 							<i class="flaticon-045-heart"></i>
 							<span class="nav-text">Courses</span>
 						</a>
                         <ul aria-expanded="false">
-                            <li><a href="{{route('admin.courses.index')}}">Category</a></li>
                             <li><a href="{{route('admin.courses.index')}}">Courses</a></li>
+                            <li><a href="{{route('admin.subject.index')}}">Subjects</a></li>
                         </ul>
-                    </li> -->
+                    </li>
                     <li><a  href="{{route('admin.center.index')}}" aria-expanded="false">
 							<i class="flaticon-041-graph"></i>
 							<span class="nav-text">Centers</span>

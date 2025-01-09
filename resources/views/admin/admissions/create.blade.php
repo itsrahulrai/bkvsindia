@@ -50,7 +50,7 @@ Admission Create - BKVS INDIA
                            @enderror
                         </div>
                         <div class="col-md-4 mb-3">
-                           <label for="course_id" class="form-label">Course</label>
+                           <label for="course_id" class="form-label">Course Category</label>
                            <select class="form-control" name="course_id" id="course_id">
                               <option value="" selected disabled>Choose a Course</option>
                               @foreach($courses as $course)

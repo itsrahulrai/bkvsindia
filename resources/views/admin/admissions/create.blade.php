@@ -94,19 +94,22 @@ Admission Create - BKVS INDIA
                         <div class="col-md-4 mb-3">
                            <label for="roll_no" class="form-label">Roll Number</label>
                            <input type="text" class="form-control" name="roll_no" id="roll_no"
-                              value="{{ old('roll_no', $admissions->roll_no ?? '') }}">
+                              value="{{ old('roll_no', $admissions->roll_no ?? '') }}" readonly>
                            @error('roll_no')
                            <div class="invalid-feedback">{{ $message }}</div>
                            @enderror
+                           <small class="form-text text-muted">Roll Number is automatically generated based on session & course program.</small>
                         </div>
                         <div class="col-md-4 mb-3">
                            <label for="enroll_no" class="form-label">Enrollment Number</label>
                            <input type="text" class="form-control" name="enroll_no" id="enroll_no"
-                              value="{{ old('enroll_no', $admissions->enroll_no ?? '') }}">
+                              value="{{ old('enroll_no', $admissions->enroll_no ?? '') }}" readonly>
                            @error('enroll_no')
                            <div class="invalid-feedback">{{ $message }}</div>
                            @enderror
+                           <small class="form-text text-muted">Enrollment Number is automatically generated based on session & course program.</small>
                         </div>
+                        
                         <div class="col-md-4 mb-3">
                            <label for="mobile_no" class="form-label">Mobile No</label>
                            <input type="number" class="form-control" name="mobile_no" id="mobile_no"
@@ -209,51 +212,7 @@ Admission Create - BKVS INDIA
                            <div class="invalid-feedback">{{ $message }}</div>
                            @enderror
                         </div>
-                        <!-- Academic Details -->
-                        <div class="col-md-4 mb-3">
-                            <label for="course_program" class="form-label">Course Program</label>
-                            <select class="form-control" name="course_program" id="course_program">
-                                <option value="">Choose Program</option>
-                                <option value="one_year" {{ old('course_program', $admissions->course_program ?? '') == 'one_year' ? 'selected' : '' }}>One Year</option>
-                                <option value="two_year" {{ old('course_program', $admissions->course_program ?? '') == 'two_year' ? 'selected' : '' }}>Two Year</option>
-                            </select>
-                            @error('course_program')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-4 mb-3">
-                           <label for="start_session" class="form-label">Start Session</label>
-                           <select class="form-control" name="start_session" id="start_session">
-                              <option value="">Choose Year</option>
-                              @php
-                              $currentYear = date('Y');
-                              @endphp
-                              @for ($year = $currentYear; $year >= 1950; $year--)
-                              <option value="{{ $year }}" {{ old('start_session', $admissions->start_session ?? '') == $year ? 'selected' : '' }}>
-                              {{ $year }}
-                              </option>
-                              @endfor
-                           </select>
-                           @error('start_session')
-                           <div class="invalid-feedback">{{ $message }}</div>
-                           @enderror
-                        </div>
-                        <div class="col-md-4 mb-3">
-                           <label for="end_session" class="form-label">End Session</label>
-                           <select class="form-control" name="end_session" id="end_session">
-                              <option value="">Choose Year</option>
-                              @for ($year = $currentYear; $year >= 1950; $year--)
-                              <option value="{{ $year }}" {{ old('end_session', $admissions->end_session ?? '') == $year ? 'selected' : '' }}>
-                              {{ $year }}
-                              </option>
-                              @endfor
-                           </select>
-                           @error('end_session')
-                           <div class="invalid-feedback">{{ $message }}</div>
-                           @enderror
-                        </div>
-
+     
                         <div class="col-md-4 mb-3">
                            <label for="remarks" class="form-label">Remarks</label>
                            <textarea class="form-control" name="remarks" id="remarks">{{ old('remarks', $admissions->remarks ?? '') }}</textarea>
@@ -262,6 +221,110 @@ Admission Create - BKVS INDIA
                            @enderror
                         </div>
 
+                       
+                     <!-- Course Program Selection -->
+                    
+                        <div class="col-md-12">
+                              <label for="course_program" class="form-label">Course Program</label>
+                              <select class="form-control" name="course_program" id="course_program">
+                                 <option value="">Choose Program</option>
+                                 <option value="one_year" {{ old('course_program', $admissions->course_program ?? '') == 'one_year' ? 'selected' : '' }}>One Year</option>
+                                 <option value="two_year" {{ old('course_program', $admissions->course_program ?? '') == 'two_year' ? 'selected' : '' }}>Two Year</option>
+                              </select>
+                              @error('course_program')
+                              <div class="invalid-feedback">{{ $message }}</div>
+                              @enderror
+                        </div>
+                   
+
+                     <!-- Sessions for One Year -->
+                    
+                        <div class="col-md-12 mt-3" id="oneYearSession" style="display: none;">
+                              <table class="table table-bordered">
+                                 <thead>
+                                    <tr>
+                                          <th>Start Session</th>
+                                          <th>End Session</th>
+                                    </tr>
+                                 </thead>
+                                 <tbody>
+                                    <tr>
+                                          <td>
+                                             <select class="form-control" name="start_session" id="start_session">
+                                                <option value="">Choose Year</option>
+                                                @php $currentYear = date('Y'); @endphp
+                                                @for ($year = $currentYear; $year >= 1950; $year--)
+                                                      <option value="{{ $year }}" {{ old('start_session', $admissions->start_session ?? '') == $year ? 'selected' : '' }}>{{ $year }}</option>
+                                                @endfor
+                                             </select>
+                                          </td>
+                                          <td>
+                                             <select class="form-control" name="end_session" id="end_session">
+                                                <option value="">Choose Year</option>
+                                                @for ($year = $currentYear; $year >= 1950; $year--)
+                                                      <option value="{{ $year }}" {{ old('end_session', $admissions->end_session ?? '') == $year ? 'selected' : '' }}>{{ $year }}</option>
+                                                @endfor
+                                             </select>
+                                          </td>
+                                    </tr>
+                                 </tbody>
+                              </table>
+                        </div>
+                     
+
+                     <!-- Sessions for Two Years -->
+                    
+                        <div class="col-md-12  mt-3" id="twoYearSession" style="display: none;">
+                              <table class="table table-bordered">
+                                 <thead>
+                                    <tr>
+                                          <th>1st Year Start</th>
+                                          <th>1st Year End</th>
+                                          <th>2nd Year Start</th>
+                                          <th>2nd Year End</th>
+                                    </tr>
+                                 </thead>
+                                 <tbody>
+                                    <tr>
+                                          <td>
+                                             <select class="form-control" name="start_session_first" id="start_session_first">
+                                                <option value="">Choose Year</option>
+                                                @for ($year = $currentYear; $year >= 1950; $year--)
+                                                      <option value="{{ $year }}" {{ old('start_session_first', $admissions->start_session_first ?? '') == $year ? 'selected' : '' }}>{{ $year }}</option>
+                                                @endfor
+                                             </select>
+                                          </td>
+                                          <td>
+                                             <select class="form-control" name="end_session_first" id="end_session_first">
+                                                <option value="">Choose Year</option>
+                                                @for ($year = $currentYear; $year >= 1950; $year--)
+                                                      <option value="{{ $year }}" {{ old('end_session_first', $admissions->end_session_first ?? '') == $year ? 'selected' : '' }}>{{ $year }}</option>
+                                                @endfor
+                                             </select>
+                                          </td>
+                                          <td>
+                                             <select class="form-control" name="start_session_second" id="start_session_second">
+                                                <option value="">Choose Year</option>
+                                                @for ($year = $currentYear; $year >= 1950; $year--)
+                                                      <option value="{{ $year }}" {{ old('start_session_second', $admissions->start_session_second ?? '') == $year ? 'selected' : '' }}>{{ $year }}</option>
+                                                @endfor
+                                             </select>
+                                          </td>
+                                          <td>
+                                             <select class="form-control" name="end_session_second" id="end_session_second">
+                                                <option value="">Choose Year</option>
+                                                @for ($year = $currentYear; $year >= 1950; $year--)
+                                                      <option value="{{ $year }}" {{ old('end_session_second', $admissions->end_session_second ?? '') == $year ? 'selected' : '' }}>{{ $year }}</option>
+                                                @endfor
+                                             </select>
+                                          </td>
+                                    </tr>
+                                 </tbody>
+                              </table>
+                        </div>
+                 
+                     
+                     
                         <h4 style="color: #EC6923;" class="mb-3 mt-3">
                            <i class="bi bi-journal-bookmark" style="color: #EC6923;"></i> Academic Details
                         </h4>
@@ -475,3 +538,23 @@ Admission Create - BKVS INDIA
    </div>
 </div>
 @endsection
+
+@push('script')
+   <!-- JavaScript -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const courseProgram = document.getElementById('course_program');
+    const oneYearSession = document.getElementById('oneYearSession');
+    const twoYearSession = document.getElementById('twoYearSession');
+
+    const toggleSessions = () => {
+        const selectedProgram = courseProgram.value;
+        oneYearSession.style.display = selectedProgram === 'one_year' ? 'block' : 'none';
+        twoYearSession.style.display = selectedProgram === 'two_year' ? 'block' : 'none';
+    };
+
+    toggleSessions();
+    courseProgram.addEventListener('change', toggleSessions);
+});
+</script>
+@endpush

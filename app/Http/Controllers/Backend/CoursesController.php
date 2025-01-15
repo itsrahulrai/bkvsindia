@@ -35,9 +35,9 @@ class CoursesController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'parent_id' => 'required',
+            // 'parent_id' => 'required',
             'name' => 'required',
-            'duration' => 'required|numeric',
+            'duration' => 'required',
             'mode' => 'required',
             'eligibility' => 'required',
             'fees' => 'required|numeric',
@@ -85,9 +85,9 @@ class CoursesController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'parent_id' => 'required',
+            // 'parent_id' => 'required',
             'name' => 'required',
-            'duration' => 'required|numeric',
+            'duration' => 'required',
             'mode' => 'required',
             'eligibility' => 'required',
             'fees' => 'required|numeric',
@@ -116,10 +116,19 @@ class CoursesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
+
     public function destroy(string $id)
     {
         $course = Course::findOrFail($id);
+        $linkedAdmissions = $course->admissions()->exists(); 
+    
+        if ($linkedAdmissions) {
+            return response()->json(['status' => 'error', 'message' => 'Course cannot be deleted as it has linked admissions.'], 400);
+        }
         $course->delete();
-        return response(['status' => 'success', 'message' => 'Deleted Successfully!']);
+    
+        return response()->json(['status' => 'success', 'message' => 'Course deleted successfully!']);
     }
+    
+
 }

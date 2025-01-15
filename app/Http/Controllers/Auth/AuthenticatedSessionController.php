@@ -48,7 +48,7 @@ class AuthenticatedSessionController extends Controller
         }
     
         // Return login view for unauthenticated users
-        return view('auth.login');
+        return view('admin.auth.login');
     }
     
 

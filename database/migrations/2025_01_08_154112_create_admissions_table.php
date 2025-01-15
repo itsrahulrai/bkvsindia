@@ -33,9 +33,18 @@ return new class extends Migration
             $table->string('state'); // State
             $table->string('city'); // City
             $table->string('course_program'); // Course Program
+
             $table->string('start_session'); // Start Session
             $table->string('end_session'); // End Session
+
             $table->string('academic_year'); // Academic Year
+
+              // New columns for 1st and 2nd Year Sessions
+            $table->string('start_session_first')->nullable(); // 1st Year Start Session
+            $table->string('end_session_first')->nullable(); // 1st Year End Session
+            $table->string('start_session_second')->nullable(); // 2nd Year Start Session
+            $table->string('end_session_second')->nullable(); // 2nd Year End Session
+            
             
             // Educational Details
             $table->string('year_10th')->nullable(); // 10th Year

@@ -12,7 +12,7 @@ Admissions
     <div class="col-12">
       <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-          <h4 class="card-title">Centers</h4>
+          <h4 class="card-title">Admissions </h4>
           <a href="{{route('admin.admission.create')}}"  class="btn btn-rounded btn-danger"><span
                                         class="btn-icon-start text-info"><i class="fa fa-plus color-danger"></i>
                                     </span>Add</a>
@@ -58,6 +58,22 @@ Admissions
                   
                   <td>
                     <div class="d-flex">
+                      <!-- Generate Certificate Buttons -->
+                      @if ($admission->course_program === 'one_year')
+                          <!-- Display button for generating certificate for one-year program -->
+                          <a href="{{ route('admin.generateMarksheetOneYear', $admission->id) }}" class="btn btn-success shadow btn-sm me-2" title="Generate 1st Marksheet">
+                              <i class="fas fa-file-alt fs-7"></i>
+                          </a>
+                      @elseif ($admission->course_program === 'two_year')
+                          <!-- Display both buttons for generating certificates for two-year program -->
+                          <a href="{{ route('admin.generateMarksheetOneYear', $admission->id) }}" class="btn btn-success shadow btn-sm me-2" title="Generate 1st Marksheet">
+                              <i class="fas fa-file-alt fs-7"></i>
+                          </a>
+                          <a href="{{ route('admin.generateMarksheetTwoYear', $admission->id) }}" class="btn btn-success shadow btn-sm me-2" title="Generate 2nd Marksheet">
+                              <i class="fas fa-file-alt fs-7"></i>
+                          </a>
+                      @endif
+
                       <!-- Edit Button -->
                       <a href="{{ route('admin.admission.edit', $admission->id ) }}" class="btn btn-primary shadow btn-sm me-2" title="Edit Course">
                         <i class="fas fa-edit fs-7"></i>

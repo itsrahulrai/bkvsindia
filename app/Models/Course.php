@@ -25,8 +25,15 @@ class Course extends Model
          return $this->hasMany(Admission::class);
      }
 
+    
      public function parent()
      {
          return $this->belongsTo(Course::class, 'parent_id');
      }
+
+     public function courseSubjects()
+    {
+        return $this->hasMany(CourseSubject::class, 'course_detail_id', 'id');
+    }
+
 }

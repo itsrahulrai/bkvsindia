@@ -44,19 +44,21 @@ Subject  Edit - BKVS INDIA
 
         <!-- Semester -->
         <div class="col-md-4 mb-3">
-            <label for="semester" class="form-label">Semester</label>
-            <select class="form-control" name="semester" id="semester">
-                <option value="" selected disabled>Choose a Semester</option>
-                @for($i = 1; $i <= 8; $i++)
-                    <option value="{{ $i }}" {{ old('semester', $courseDetails->semester ?? '') == $i ? 'selected' : '' }}>
-                        Semester {{ $i }}
-                    </option>
-                @endfor
-            </select>
-            @error('semester')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
+    <label for="semester" class="form-label">Semester</label>
+    <select class="form-control" name="semester" id="semester">
+        <option value="" selected disabled>Choose a Semester</option>
+        <option value="1" {{ old('semester', $courseDetails->semester ?? '') == '1' ? 'selected' : '' }}>
+            Year I
+        </option>
+        <option value="2" {{ old('semester', $courseDetails->semester ?? '') == '2' ? 'selected' : '' }}>
+            Year II
+        </option>
+    </select>
+    @error('semester')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+</div>
+
 
         <!-- Statement Mark -->
         <div class="col-md-4 mb-3">

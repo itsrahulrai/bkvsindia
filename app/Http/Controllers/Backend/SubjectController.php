@@ -151,17 +151,5 @@ class SubjectController extends Controller
         $courseDetail->delete();
         return response(['status' => 'success', 'message' => 'Deleted Successfully!']);
     }
-    
 
-     /**
-     * Status Change.
-     */
-    public function changeStatus(Request $request)
-    {
-        $courseDetail = CourseDetail::findOrFail($request->id);
-        $courseDetail->status = $request->status; 
-        $courseDetail->save();
-        
-        return response(['message' => 'Status has been updated!']);
-    }
 }

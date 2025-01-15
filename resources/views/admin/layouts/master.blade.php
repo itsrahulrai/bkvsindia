@@ -188,7 +188,8 @@
 			$(".booking-calender .fa.fa-clock-o").addClass('fa-clock');
 		});
 	</script>
-	<!-- <script>
+
+<script>
     @if(session('success'))
         toastr.success("{{ session('success') }}", "Success", {
             "closeButton": true,
@@ -197,11 +198,9 @@
             "positionClass": "toast-top-right"
         });
     @endif
-</script> -->
 
-<script>
-    @if(session('success'))
-        toastr.success("{{ session('success') }}", "Success", {
+    @if(session('error'))
+        toastr.error("{{ session('error') }}", "Error", {
             "closeButton": true,
             "progressBar": true,
             "timeOut": 5000, // 5 seconds
@@ -224,6 +223,7 @@
 
 
 
+<!-- 
 <script>
         $(document).ready(function() {
             $.ajaxSetup({
@@ -282,7 +282,72 @@
                 });
             });
         });
-    </script>
+    </script> -->
+
+
+
+    <script>
+    $(document).ready(function() {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $('body').on('click', '.delete-item', event => {
+            event.preventDefault();
+
+            const $row = $(event.currentTarget).closest('tr');
+            const deleteUrl = $(event.currentTarget).attr('href');
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#F72B50',
+                cancelButtonColor: '#0E8A74',
+                confirmButtonText: "Yes, delete it!"
+            }).then(result => {
+                if (result.isConfirmed) {
+                    // Send an AJAX request to delete the item from the server
+                    $.ajax({
+                        type: 'POST',
+                        url: deleteUrl,
+                        data: {
+                            _method: 'DELETE', // Include the method as hidden input
+                        },
+                        success: data => {
+                            const { status, message } = data;
+                            const icon = status === 'success' ? 'success' : 'error';
+
+                            Swal.fire({
+                                title: status === 'success' ? 'Deleted!' : 'Error!',
+                                text: message,
+                                icon: icon
+                            });
+
+                            // If deletion is successful, remove the row from the table
+                            if (status === 'success') {
+                                $row.remove();
+                            }
+                        },
+                        error: (xhr, status, error) => {
+                            // In case of server-side errors
+                            const message = xhr.responseJSON?.message || "An error occurred while processing your request.";
+                            Swal.fire({
+                                title: 'Error!',
+                                text: message,
+                                icon: 'error'
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+
 
      <!-- Include Dropify JS -->
      <script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js"></script>

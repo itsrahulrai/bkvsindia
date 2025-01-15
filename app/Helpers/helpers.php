@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\Center;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 
 
@@ -28,6 +30,69 @@ if (!function_exists('centerCode')) {
         $newCode = 'BKVS' . str_pad($newNumber, 3, '0', STR_PAD_LEFT); // Ensure 3 digits are used
 
         return $newCode;
+    }
+}
+
+
+
+
+if (!function_exists('generateEnrollNo')) {
+    /**
+     * Generate a unique EnrollNo with the prefix 'BKVS' and session year.
+     *
+     * @param string $session
+     * @return string
+     */
+    function generateEnrollNo(string $session): string
+    {
+        try {
+            // Generate random 6-digit number
+            $uniqueNo = str_pad(rand(100000, 999999), 6, '0', STR_PAD_LEFT);
+
+            // Generate the EnrollNo with the session and unique number
+            $enrollNo = 'BKVS' . $session . $uniqueNo;
+
+            // Check if this EnrollNo already exists in the database
+            if (DB::table('admissions')->where('enroll_no', $enrollNo)->exists()) {
+                // If it already exists, regenerate the number
+                return generateEnrollNo($session);
+            }
+
+            return $enrollNo;
+        } catch (\Exception $e) {
+            Log::error('Error generating EnrollNo: ' . $e->getMessage());
+            throw new \Exception('Error generating EnrollNo');
+        }
+    }
+}
+
+if (!function_exists('generateRollNo')) {
+    /**
+     * Generate a unique RollNo with the session year.
+     *
+     * @param string $session
+     * @return string
+     */
+    function generateRollNo(string $session): string
+    {
+        try {
+            // Generate random 6-digit number
+            $uniqueRollNo = str_pad(rand(100000, 999999), 6, '0', STR_PAD_LEFT);
+
+            // Generate the RollNo with the session and unique number
+            $rollNo = $session . $uniqueRollNo;
+
+            // Check if this RollNo already exists in the database
+            if (DB::table('admissions')->where('roll_no', $rollNo)->exists()) {
+                // If it already exists, regenerate the number
+                return generateRollNo($session);
+            }
+
+            return $rollNo;
+        } catch (\Exception $e) {
+            Log::error('Error generating RollNo: ' . $e->getMessage());
+            throw new \Exception('Error generating RollNo');
+        }
     }
 }
 

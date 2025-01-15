@@ -28,7 +28,7 @@ class CenterController extends Controller
         return view('admin.centers.create');
         
     }
-
+    
     /**
      * Store a newly created resource in storage.
      */
@@ -150,17 +150,20 @@ class CenterController extends Controller
             return redirect()->back()->withErrors('Error updating Center: ' . $e->getMessage());
         }
     }
-    
-
 
     /**
      * Remove the specified resource from storage.
      */ 
+
     public function destroy(string $id)
     {
-        $center = center::findOrFail($id); 
+        $center = Center::findOrFail($id);
+        $linkedAdmissions = $center->admissions()->exists(); 
+        if ($linkedAdmissions) {
+            return response()->json(['status' => 'error', 'message' => 'Center cannot be deleted as it has linked admissions.'], 400);
+        }
         $center->delete();
-        return response(['status' => 'success', 'message' => 'Deleted Successfully!']);
+        return response(['status' => 'success', 'message' => 'Center deleted successfully!']);
     }
 
      /**

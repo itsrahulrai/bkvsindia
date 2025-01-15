@@ -27,14 +27,18 @@ class AdmissionController extends Controller
      */
     public function create()
     {
-        $centers = Center::select('id', 'center_code', 'institute_name')->latest()->get();
-        $courses = Course::select('id', 'name')->get();
+        $centers = Center::select('id', 'center_code', 'institute_name')
+                 ->where('status', 'active')
+                 ->latest()
+                 ->get();
+        $courses = Course::select('id', 'name')->whereNotNull('parent_id')->get();
         return view('admin.admissions.create', compact('centers', 'courses'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
+   
     public function store(Request $request)
     {
         $request->validate([
@@ -42,6 +46,7 @@ class AdmissionController extends Controller
             'student_name' => 'required|string|max:255',
             'course_id' => 'required|exists:courses,id',
             'gender' => 'required|in:male,female',
+            'course_program' => 'required|in:one_year,two_year', 
         ]);
 
         try {
@@ -51,59 +56,68 @@ class AdmissionController extends Controller
             $graduationPath = $this->uploadImage($request, 'graduation_image', 'uploads/images');
             $idproofPath = $this->uploadImage($request, 'id_proof', 'uploads/images');
             $otherPath = $this->uploadImage($request, 'other_document', 'uploads/images');
+                
+            $session = $request->course_program == 'two_year' ? $request->start_session_first : $request->start_session;
+            $enrollNo = generateEnrollNo($session);
+            $rollNo = generateRollNo($session);
 
-           Admission::create([
-            'center_id' => $request->center_id,
-            'student_name' => $request->student_name,
-            'course_id' => $request->course_id,
-            'gender' => $request->gender,
-            'dob' => $request->dob,
-            'registration_date' => $request->registration_date,
-            'roll_no' => $request->roll_no,
-            'enroll_no' => $request->enroll_no,
-            'mobile_no' => $request->mobile_no,
-            'alternate_contact_no' => $request->alternate_contact_no,
-            'email' => $request->email,
-            'semester' => $request->semester,
-            'registration_year' => $request->registration_year,
-            'tenth_passing_year' => $request->tenth_passing_year,
-            'twelfth_passing_year' => $request->twelfth_passing_year,
-            'state' => $request->state,
-            'city' => $request->city,
-            'course_program' => $request->course_program,
-            'start_session' => $request->start_session,
-            'end_session' => $request->end_session,
-            'remarks' => $request->remarks,
-            'year_10th' => $request->year_10th,
-            'stream_10th' => $request->stream_10th,
-            'stream_12th' => $request->stream_12th,
-            'board_university_10th' => $request->board_university_10th,
-            'result_10th' => $request->result_10th,
-            'year_12th' => $request->year_12th,
-            'board_university_12th' => $request->board_university_12th,
-            'result_12th' => $request->result_12th,
-            'other_year' => $request->other_year,
-            'other_stream' => $request->other_stream,
-            'other_board_university' => $request->other_board_university,
-            'other_result' => $request->other_result,
-            'father_name' => $request->father_name,
-            'mother_name' => $request->mother_name,
-            'photo' => $photoPath,
-            'tenth_image' => $tenthPath,
-            'twelfth_image' => $twelfthPath,
-            'graduation_image' => $graduationPath,
-            'post_graduation_image' => $photoPath,
-            'id_proof' => $idproofPath,
-            'other_document' => $otherPath,
-            ]); 
-            session()->flash('success', 'Admission  created successfully!');
+            Admission::create([
+                'center_id' => $request->center_id,
+                'student_name' => $request->student_name,
+                'course_id' => $request->course_id,
+                'gender' => $request->gender,
+                'dob' => $request->dob,
+                'registration_date' => $request->registration_date,
+                'roll_no' => $rollNo, // Use generated Roll No
+                'enroll_no' => $enrollNo, // Use generated Enroll No
+                'mobile_no' => $request->mobile_no,
+                'alternate_contact_no' => $request->alternate_contact_no,
+                'email' => $request->email,
+                'semester' => $request->semester,
+                'registration_year' => $request->registration_year,
+                'tenth_passing_year' => $request->tenth_passing_year,
+                'twelfth_passing_year' => $request->twelfth_passing_year,
+                'state' => $request->state,
+                'city' => $request->city,
+                'course_program' => $request->course_program,
+                'start_session' => $request->start_session,
+                'end_session' => $request->end_session,
+                'start_session_first' => $request->start_session_first,
+                'end_session_first' => $request->end_session_first,
+                'start_session_second' => $request->start_session_second,
+                'end_session_second' => $request->end_session_second,
+                'remarks' => $request->remarks,
+                'year_10th' => $request->year_10th,
+                'stream_10th' => $request->stream_10th,
+                'stream_12th' => $request->stream_12th,
+                'board_university_10th' => $request->board_university_10th,
+                'result_10th' => $request->result_10th,
+                'year_12th' => $request->year_12th,
+                'board_university_12th' => $request->board_university_12th,
+                'result_12th' => $request->result_12th,
+                'other_year' => $request->other_year,
+                'other_stream' => $request->other_stream,
+                'other_board_university' => $request->other_board_university,
+                'other_result' => $request->other_result,
+                'father_name' => $request->father_name,
+                'mother_name' => $request->mother_name,
+                'photo' => $photoPath,
+                'tenth_image' => $tenthPath,
+                'twelfth_image' => $twelfthPath,
+                'graduation_image' => $graduationPath,
+                'post_graduation_image' => $photoPath,
+                'id_proof' => $idproofPath,
+                'other_document' => $otherPath,
+            ]);
+
+            session()->flash('success', 'Admission created successfully!');
             return redirect()->route('admin.admission.index');
         } catch (\Exception $e) {
-            Log::error('Error creating Admission : ' . $e->getMessage());
+            Log::error('Error creating Admission: ' . $e->getMessage());
             return redirect()->back();
         }
     }
-    
+
     /**
      * Display the specified resource.
      */
@@ -118,8 +132,11 @@ class AdmissionController extends Controller
     public function edit(string $id)
     {
         $admissions = Admission::with(['center', 'course'])->findOrFail($id);
-        $centers = Center::select('id', 'center_code', 'institute_name')->get();
-        $courses = Course::select('id', 'name')->get();
+        $centers = Center::select('id', 'center_code', 'institute_name')
+        ->where('status', 'active')
+        ->latest()
+        ->get();
+        $courses = Course::select('id', 'name')->whereNotNull('parent_id')->get();
         return view('admin.admissions.create', compact('centers', 'courses','admissions'));
     }
 
@@ -135,17 +152,21 @@ class AdmissionController extends Controller
             'gender' => 'required|in:male,female',
         ]);
 
+        $session = $request->course_program == 'two_year' ? $request->start_session_first : $request->start_session;
+        $enrollNo = generateEnrollNo($session);
+        $rollNo = generateRollNo($session);
+
         try {
             $admission = Admission::findOrFail($id);
             $admissionData = [
-                'center_id' => $request->center_id,
+                // 'center_id' => $request->center_id,
                 'student_name' => $request->student_name,
                 'course_id' => $request->course_id,
                 'gender' => $request->gender,
                 'dob' => $request->dob,
                 'registration_date' => $request->registration_date,
-                'roll_no' => $request->roll_no,
-                'enroll_no' => $request->enroll_no,
+                'roll_no' => $rollNo, // Use generated Roll No
+                'enroll_no' => $enrollNo, // Use generated Enroll No
                 'mobile_no' => $request->mobile_no,
                 'alternate_contact_no' => $request->alternate_contact_no,
                 'email' => $request->email,
@@ -158,6 +179,10 @@ class AdmissionController extends Controller
                 'course_program' => $request->course_program,
                 'start_session' => $request->start_session,
                 'end_session' => $request->end_session,
+                'start_session_first' => $request->start_session_first,
+                'end_session_first' => $request->end_session_first,
+                'start_session_second' => $request->start_session_second,
+                'end_session_second' => $request->end_session_second,
                 'remarks' => $request->remarks,
                 'year_10th' => $request->year_10th,
                 'stream_10th' => $request->stream_10th,

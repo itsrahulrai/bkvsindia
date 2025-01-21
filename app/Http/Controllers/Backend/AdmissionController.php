@@ -31,7 +31,10 @@ class AdmissionController extends Controller
                  ->where('status', 'active')
                  ->latest()
                  ->get();
-        $courses = Course::select('id', 'name')->whereNotNull('parent_id')->get();
+
+        $courses = Course::select('id', 'name')->whereNull('parent_id')->get();
+        // dd($courses);
+        $subcourses = Course::select('id', 'name')->whereNotNull('parent_id')->get();
         return view('admin.admissions.create', compact('centers', 'courses'));
     }
 
@@ -65,6 +68,7 @@ class AdmissionController extends Controller
                 'center_id' => $request->center_id,
                 'student_name' => $request->student_name,
                 'course_id' => $request->course_id,
+                'subcourse_id' => $request->subcourse_id,
                 'gender' => $request->gender,
                 'dob' => $request->dob,
                 'registration_date' => $request->registration_date,
@@ -79,6 +83,7 @@ class AdmissionController extends Controller
                 'twelfth_passing_year' => $request->twelfth_passing_year,
                 'state' => $request->state,
                 'city' => $request->city,
+
                 'course_program' => $request->course_program,
                 'start_session' => $request->start_session,
                 'end_session' => $request->end_session,
@@ -86,6 +91,7 @@ class AdmissionController extends Controller
                 'end_session_first' => $request->end_session_first,
                 'start_session_second' => $request->start_session_second,
                 'end_session_second' => $request->end_session_second,
+                
                 'remarks' => $request->remarks,
                 'year_10th' => $request->year_10th,
                 'stream_10th' => $request->stream_10th,
@@ -133,12 +139,16 @@ class AdmissionController extends Controller
     {
         $admissions = Admission::with(['center', 'course'])->findOrFail($id);
         $centers = Center::select('id', 'center_code', 'institute_name')
-        ->where('status', 'active')
-        ->latest()
-        ->get();
-        $courses = Course::select('id', 'name')->whereNotNull('parent_id')->get();
-        return view('admin.admissions.create', compact('centers', 'courses','admissions'));
+            ->where('status', 'active')
+            ->latest()
+            ->get();
+    
+        $courses = Course::select('id', 'name')->whereNull('parent_id')->get();
+        $subcourses = Course::select('id', 'name')->where('id', $admissions->subcourse_id)->get();
+    
+        return view('admin.admissions.create', compact('centers', 'courses', 'subcourses', 'admissions'));
     }
+    
 
     /**
      * Update the specified resource in storage.

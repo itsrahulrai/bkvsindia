@@ -14,11 +14,13 @@ class Marksheet extends Model
         'center_id', 
         'type', 
         'subjects_data',
+        'subjects_data2',
         'status',
     ];
 
      protected $casts = [
         'subjects_data' => 'array',
+        'subjects_data2' => 'array',
     ];
    
     
@@ -36,4 +38,26 @@ class Marksheet extends Model
     {
         return $this->belongsTo(Course::class , 'course_id');
     }
+
+   
+    
+
+    public function subjects()
+    {
+        return $this->hasManyThrough(
+            CourseSubject::class,
+            CourseDetail::class,
+            'course_id',       // Foreign key on CourseDetail
+            'course_detail_id', // Foreign key on CourseSubject
+            'course_id',       // Local key on Marksheet
+            'id'               // Local key on CourseDetail
+        );
+    }
+    
+
+
+   
+    
+
+
 }

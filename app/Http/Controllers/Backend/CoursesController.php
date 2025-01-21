@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
 use Illuminate\Http\Request;
+use App\Traits\ImageUploadTrait;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class CoursesController extends Controller
 {
+    use ImageUploadTrait;
     /**
      * Display a listing of the resource.
      */
@@ -34,8 +37,8 @@ class CoursesController extends Controller
      */
     public function store(Request $request)
     {
+
         $request->validate([
-            // 'parent_id' => 'required',
             'name' => 'required',
             'duration' => 'required',
             'mode' => 'required',
@@ -43,14 +46,22 @@ class CoursesController extends Controller
             'fees' => 'required|numeric',
         ]);
 
+        $photoPath = $this->uploadImage($request, 'image', 'uploads/courses');
+
         try {
             Course::create([
                 'parent_id' => $request->parent_id,
                 'name' => $request->name,
+                'slug' => Str::slug($request->name),
                 'duration' => $request->duration,
                 'mode' => $request->mode,
                 'eligibility' => $request->eligibility,
                 'fees' => $request->fees,
+                'content' => $request->content,
+                'sidecontent' => $request->sidecontent,
+                'skill_level' => $request->skill_level,
+                'price' => $request->price,
+                'image' => $photoPath,
             ]);
             session()->flash('success', 'Course created successfully!');
             return redirect()->back();
@@ -60,6 +71,8 @@ class CoursesController extends Controller
         }
 
     }
+
+    
 
     /**
      * Display the specified resource.
@@ -84,24 +97,37 @@ class CoursesController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        // dd($request->all());
+
         $request->validate([
-            // 'parent_id' => 'required',
             'name' => 'required',
             'duration' => 'required',
             'mode' => 'required',
             'eligibility' => 'required',
             'fees' => 'required|numeric',
+            'slug' => 'unique:courses,slug,' . $id, 
         ]);
+
+        $photoPath = null;
+        if ($request->hasFile('image')) {
+            $photoPath = $this->uploadImage($request, 'image', 'uploads/courses');
+        }
 
         try {
             $course = Course::findOrFail($id);
             $course->update([
                 'parent_id' => $request->parent_id,
                 'name' => $request->name,
+                'slug' => Str::slug($request->name),
                 'duration' => $request->duration,
                 'mode' => $request->mode,
                 'eligibility' => $request->eligibility,
                 'fees' => $request->fees,
+                'content' => $request->content,
+                'sidecontent' => $request->sidecontent,
+                'skill_level' => $request->skill_level,
+                'price' => $request->price,
+               'image' => $photoPath ?? $course->image,
             ]);
 
             session()->flash('success', 'Course updated successfully!');

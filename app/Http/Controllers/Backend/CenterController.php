@@ -20,6 +20,20 @@ class CenterController extends Controller
         return view('admin.centers.index',compact('centers'));
     }
 
+    public function Pending()
+    {
+        $centers = Center::where('status','pending')->latest()->paginate(100); 
+        return view('admin.centers.apply-franchise',compact('centers'));
+    }
+
+    public function Rejected()
+    {
+        $centers = Center::where('status','inactive')->latest()->paginate(100);
+        return view('admin.centers.apply-franchise',compact('centers'));
+    }
+
+
+
     /**
      * Show the form for creating a new resource.
      */
@@ -104,52 +118,109 @@ class CenterController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'institute_name' => 'required',
-            'director' => 'required',
-            'phone' => 'required|numeric|digits:10',
-            'mobile' => 'required|numeric|digits:10',
-            'email' => 'required|email',
-            'state' => 'required|string',
-            'city' => 'required|string|max:100',
-            'pincode' => 'required|numeric|digits:6',
-            'website' => 'nullable|url',
-        ]);
-        try {
-            $center = Center::findOrFail($id);
-            $hashedPassword = $request->has('mobile') ? bcrypt($request->mobile) : $center->password;
-            $photoPath = $this->uploadImage($request, 'certificateImage', 'uploads/images');
-            $center->update([
-                'institute_name' => $request->institute_name,
-                'director' => $request->director,
-                'phone' => $request->phone,
-                'mobile' => $request->mobile,
-                'website' => $request->website,
-                'email' => $request->email,
-                'state' => $request->state,
-                'city' => $request->city,
-                'pincode' => $request->pincode,
-                'address' => $request->address,
-                'address1' => $request->address1,
-                'certificate' => $request->certificate,
-                'certificateImage' => $photoPath,
-                'number_of_lab_rooms' => $request->number_of_lab_rooms,
-                'space_available' => $request->space_available,
-                'date' => $request->date,
-                'message' => $request->message,
-                'status' => $request->status,
-                'password' => $hashedPassword, 
-            ]);
+    // public function update(Request $request, $id)
+    // {
+    //     $request->validate([
+    //         'institute_name' => 'required',
+    //         'director' => 'required',
+    //         'phone' => 'required|numeric|digits:10',
+    //         'mobile' => 'required|numeric|digits:10',
+    //         'email' => 'required|email',
+    //         'state' => 'required|string',
+    //         'city' => 'required|string|max:100',
+    //         'pincode' => 'required|numeric|digits:6',
+    //         'website' => 'nullable|url',
+    //     ]);
+    //     try {
+    //         $center = Center::findOrFail($id);
+    //         $hashedPassword = $request->has('mobile') ? bcrypt($request->mobile) : $center->password;
+    //         $photoPath = $this->uploadImage($request, 'certificateImage', 'uploads/images');
+    //         $center->update([
+    //             'institute_name' => $request->institute_name,
+    //             'director' => $request->director,
+    //             'phone' => $request->phone,
+    //             'mobile' => $request->mobile,
+    //             'website' => $request->website,
+    //             'email' => $request->email,
+    //             'state' => $request->state,
+    //             'city' => $request->city,
+    //             'pincode' => $request->pincode,
+    //             'address' => $request->address,
+    //             'address1' => $request->address1,
+    //             'certificate' => $request->certificate,
+    //             'certificateImage' => $photoPath,
+    //             'number_of_lab_rooms' => $request->number_of_lab_rooms,
+    //             'space_available' => $request->space_available,
+    //             'date' => $request->date,
+    //             'message' => $request->message,
+    //             'status' => $request->status,
+    //             'password' => $hashedPassword, 
+    //         ]);
             
-            session()->flash('success', 'Center updated successfully!');
-            return redirect()->back();
-        } catch (\Exception $e) {
-            Log::error('Error updating Center: ' . $e->getMessage());
-            return redirect()->back()->withErrors('Error updating Center: ' . $e->getMessage());
+    //         session()->flash('success', 'Center updated successfully!');
+    //         return redirect()->back();
+    //     } catch (\Exception $e) {
+    //         Log::error('Error updating Center: ' . $e->getMessage());
+    //         return redirect()->back()->withErrors('Error updating Center: ' . $e->getMessage());
+    //     }
+    // }
+
+    public function update(Request $request, $id)
+{
+    $request->validate([
+        'institute_name' => 'required',
+        'director' => 'required',
+        'phone' => 'required|numeric|digits:10',
+        'mobile' => 'required|numeric|digits:10',
+        'email' => 'required|email',
+        'state' => 'required|string',
+        'city' => 'required|string|max:100',
+        'pincode' => 'required|numeric|digits:6',
+        'website' => 'nullable|url',
+    ]);
+
+    try {
+        $center = Center::findOrFail($id);
+
+        // Update center_code only if it's null
+        if (is_null($center->center_code)) {
+            $centerCode = centerCode();
+            $center->center_code = $centerCode;
         }
+
+        // Check if there's a new certificate image to upload
+        $photoPath = $request->hasFile('certificateImage') ? $this->uploadImage($request, 'certificateImage', 'uploads/images') : $center->certificateImage;
+
+        // Update the center record
+        $center->update([
+            'institute_name' => $request->institute_name,
+            'director' => $request->director,
+            'phone' => $request->phone,
+            'mobile' => $request->mobile,
+            'website' => $request->website,
+            'email' => $request->email,
+            'state' => $request->state,
+            'city' => $request->city,
+            'pincode' => $request->pincode,
+            'address' => $request->address,
+            'address1' => $request->address1,
+            'number_of_lab_rooms' => $request->number_of_lab_rooms,
+            'space_available' => $request->space_available,
+            'certificate' => $request->certificate,
+            'certificateImage' => $photoPath,
+            'date' => $request->date,
+            'message' => $request->message,
+            'status' => $request->status, // Assuming you want to allow updating the status as well
+        ]);
+
+        session()->flash('success', 'Center updated successfully!');
+        return redirect()->back();
+    } catch (\Exception $e) {
+        Log::error('Error updating Center: ' . $e->getMessage());
+        return redirect()->back()->withErrors('Error updating Center: ' . $e->getMessage());
     }
+}
+
 
     /**
      * Remove the specified resource from storage.

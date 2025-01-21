@@ -12,6 +12,23 @@
 						</a>
                        
                     </li> -->
+
+                    <li><a  href="{{route('admin.admission.index')}}" aria-expanded="false">
+							<i class="flaticon-086-star"></i>
+							<span class="nav-text">Admissions</span>
+						</a>
+                    </li>
+                    <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+							<i class="flaticon-072-printer"></i>
+							<span class="nav-text">Centers</span>
+						</a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{route('admin.center.index')}}">All Centers</a></li>
+                            <li><a href="{{route('admin.pending.center')}}">Pending Centers</a></li>
+                            <li><a href="{{route('admin.rejected.center')}}">Rejected Centers</a></li>
+                           
+                        </ul>
+                    </li>
                     <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
 							<i class="flaticon-045-heart"></i>
 							<span class="nav-text">Courses</span>
@@ -21,16 +38,8 @@
                             <li><a href="{{route('admin.subject.index')}}">Subjects</a></li>
                         </ul>
                     </li>
-                    <li><a  href="{{route('admin.center.index')}}" aria-expanded="false">
-							<i class="flaticon-041-graph"></i>
-							<span class="nav-text">Centers</span>
-						</a>
-                    </li>
-                    <li><a  href="{{route('admin.admission.index')}}" aria-expanded="false">
-							<i class="flaticon-086-star"></i>
-							<span class="nav-text">Admissions</span>
-						</a>
-                    </li>
+                  
+                   
                     <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
 							<i class="flaticon-045-heart"></i>
 							<span class="nav-text">Mange Results</span>
@@ -40,23 +49,13 @@
                             <li><a href="{{route('admin.marksheet.index')}}">Marksheet</a></li>
                         </ul>
                     </li>
-                    <li><a href="widget-basic.html" class="ai-icon" aria-expanded="false">
+
+                    <!-- <li><a href="widget-basic.html" class="ai-icon" aria-expanded="false">
 							<i class="flaticon-013-checkmark"></i>
 							<span class="nav-text">Widget</span>
 						</a>
 					</li>
-                    <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
-							<i class="flaticon-072-printer"></i>
-							<span class="nav-text">Forms</span>
-						</a>
-                        <ul aria-expanded="false">
-                            <li><a href="form-element.html">Form Elements</a></li>
-                            <li><a href="form-wizard.html">Wizard</a></li>
-                            <li><a href="form-ckeditor.html">CkEditor</a></li>
-                            <li><a href="form-pickers.html">Pickers</a></li>
-                            <li><a href="form-validation.html">Form Validate</a></li>
-                        </ul>
-                    </li>
+                  
                     <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
 							<i class="flaticon-043-menu"></i>
 							<span class="nav-text">Table</span>
@@ -85,11 +84,8 @@
                             <li><a href="page-lock-screen.html">Lock Screen</a></li>
                             <li><a href="empty-page.html">Empty Page</a></li>
                         </ul>
-                    </li>
+                    </li> -->
                 </ul>
-				<div class="copyright">
-					<p><strong>Innap Hotel Admin</strong> © 2023 All Rights Reserved</p>
-					<p class="fs-12">Made with <span class="heart"></span> by DexignZone</p>
-				</div>
+				
 			</div>
         </div>

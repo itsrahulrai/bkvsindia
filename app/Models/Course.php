@@ -12,11 +12,17 @@ class Course extends Model
     protected $fillable = [
         'parent_id',
         'name',
+        'slug',
         'duration',
+        'image',
+        'content',
+        'sidecontent',
         'mode',
         'eligibility',
         'fees',
         'status',
+        'skill_level',
+        'price',
     ];
 
      // Define relationship with Admissions
@@ -35,5 +41,11 @@ class Course extends Model
     {
         return $this->hasMany(CourseSubject::class, 'course_detail_id', 'id');
     }
+
+    public function children()
+    {
+        return $this->hasMany(Course::class, 'parent_id', 'id');
+    }
+
 
 }

@@ -15,14 +15,23 @@ return new class extends Migration
             $table->id();
             $table->foreignId('parent_id')->nullable()->constrained('courses')->onDelete('set null');
             $table->string('name')->nullable(); 
+            $table->string('slug')->nullable()->unique(); 
             $table->string('duration')->nullable(); 
             $table->string('mode')->nullable(); 
             $table->string('eligibility')->nullable(); 
             $table->string('fees')->nullable();  
+            $table->string('image')->nullable();  
+            $table->longText('content')->nullable();  
+            $table->longText('sidecontent')->nullable();  
             $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->enum('skill_level', ['beginner ', 'intermediate','high '])->default('beginner');
+            $table->enum('price', ['free ', 'paid'])->default('paid');
             $table->timestamps();
         });
     }
+
+ 
+
 
     /**
      * Reverse the migrations.

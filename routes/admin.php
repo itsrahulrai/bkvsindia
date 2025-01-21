@@ -31,6 +31,11 @@ Route::post('profile/update-password', [UserProfileController::class, 'updatePas
 
 Route::resource('courses', CoursesController::class);
 Route::put('center/change-status', [CenterController::class, 'changeStatus'])->name('center.change-status');
+Route::get('pending-center', [CenterController::class, 'Pending'])->name('pending.center');
+Route::get('rejected-center', [CenterController::class, 'Rejected'])->name('rejected.center');
+
+
+// Route::get('apply-franchise', [CenterController::class, 'franchise'])->name('applyed.franchise');
 Route::resource('center', CenterController::class);
 
 

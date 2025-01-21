@@ -39,9 +39,10 @@ Admissions
                 @foreach ($admissions as $key => $admission)
                 <tr>
                   <td>{{ $key + 1 }}</td>
-                  <td>{{ $admission->center->center_code }}</td>
-                  <td>{{ $admission->enroll_no }}</td>
-                  <td>{{ $admission->roll_no }}</td>
+                  <td>{{ $admission->center->center_code ?? '' }}</td>
+                  <td>{{ $admission->enroll_no ?? '' }}</td>
+                  <td>{{ $admission->roll_no ?? '' }}</td>
+
                   <td>{{ $admission->student_name }}</td>
                   <td>{{ $admission->course->name }}</td>
                   <td>{{ $admission->mobile_no }}</td>

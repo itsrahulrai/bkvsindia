@@ -466,9 +466,11 @@
                                                         <!-- 2nd Year Marksheet -->
                                                         @endif
 
+                                                      
+
                                                         @if(isset($firstMarksheet) && isset($firstCourseDetails))
                                                         <!-- Display First Year Data -->
-
+                                                       
                                                         <div>
                                                             <tr>
                                                                 <td width="65" height="30">&nbsp;</td>
@@ -581,7 +583,8 @@
                                                                     <strong>{{ $totalInternalMarks }}</strong>
                                                                 </td>
                                                                 <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:2px #000000 solid; border-left:1px #000000 solid;">
-                                                                    <strong>{{ $totalMarks1 }}</strong>
+                                                                    <strong>
+                                                                    {{ $totalMarks1 }}</strong>
                                                                 </td>
                                                                 <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:2px #000000 solid; border-left:1px #000000 solid;">
                                                                     <strong>{{ $firstTotalMinimumMarks ?? '00' }}</strong>
@@ -755,61 +758,7 @@
 
                                                         </div>
 
-                                                        @if(isset($firstMarksheet) && isset($firstCourseDetails))
-                                                        <!-- Display First Year Data -->
-
-                                                        
-                                                            @php
-                                                            // Initialize totals for all subjects
-                                                            $totalMarksObtained = $totalInternalMarks = $totalMarks2 = $totalMaximumMarks = 0;
-
-                                                            // Helper function for determining grade
-                                                            function getGradeA($percentage) {
-                                                            if ($percentage >= 90) return 'A+';
-                                                            if ($percentage >= 75) return 'A';
-                                                            if ($percentage >= 70) return 'B+';
-                                                            if ($percentage >= 60) return 'B';
-                                                            if ($percentage >= 50) return 'C+';
-                                                            if ($percentage >= 40) return 'C';
-                                                            if ($percentage >= 32) return 'D+';
-                                                            if ($percentage >= 20) return 'D';
-                                                            return 'E';
-                                                            }
-                                                            @endphp
-                                                            
-                                                            @php                                                                    
-                                                                $totalMarksObtained = 0;
-                                                                $totalInternalMarks = 0;
-                                                                $totalMarks1 = 0;  // Initialize $totalMarks1
-                                                                $totalMaximumMarks = 0;
-                                                             @endphp
-
-                                                            @foreach($firstCourseDetails as $course)
-                                                            @foreach ($course->subjects as $index => $subject)
-                                                            @php
-                                                            // Retrieve subject data dynamically
-                                                            $subjectData = $firstSubjectsData[$index] ?? [];
-                                                            $marksObtained = $subjectData['marks_obtained'] ?? 0;
-                                                            $internalMarks = $subjectData['internal_marks'] ?? 0;
-                                                            $maximumMarks = $subject->maximum_marks ?? 0;
-                                                            $totalMarks = $marksObtained + $internalMarks;
-
-                                                            // Sum up total marks for calculations
-                                                            $totalMarksObtained += $marksObtained;
-                                                            $totalInternalMarks += $internalMarks;
-                                                            $totalMarks1 += $totalMarks;
-                                                            $totalMaximumMarks += $maximumMarks;
-
-                                                           
-
-                                                           
-                                                            @endforeach
-                                                            @endforeach
-
-
-                                                     
-
-                                                        @endif
+                                                       
 
 
                                                         <tr height="30">
@@ -834,7 +783,9 @@
                                                             <tr height="30">
                                                                 <td width="65" height="27">&nbsp;</td>
                                                                 <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:2px #000000 solid;"><strong>Max. Marks</strong></td>
-                                                                <td style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid;"><strong>00</strong></td>
+                                                                <td style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid;"><strong>{{ $firstTotalMaximumMarks ?? '01' }}
+
+                                                                </strong></td>
                                                                 <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid;"><strong>{{ $totalMaximumMarks }}</strong></td>
 
                                                                 <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid;" colspan="3"><strong>1400</strong></td>
@@ -847,7 +798,8 @@
                                                             <tr height="20" style="border-bottom:1px solid #000">
                                                                 <td width="65" height="27">&nbsp;</td>
                                                                 <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:2px #000000 solid; border-bottom:1px #000000 solid;"><strong>Marks</strong></td>
-                                                                <td style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid; border-bottom:1px #000000 solid;"><strong>{{ $totalMaximumMarks }}</strong></td>
+                                                                <td style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid; border-bottom:1px #000000 solid;"><strong> {{ $totalMarks1 ?? '02' }}
+                                                                </strong></td>
                                                                 <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid; border-bottom:1px #000000 solid;"><strong>{{ $totalMarks2 }}</strong></td>
 
                                                                 <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid; border-bottom:1px #000000 solid; width:200px" colspan="3"><strong>1015</strong></td>
@@ -856,6 +808,10 @@
 
 
                                                         @endif
+
+                                                        
+
+                                                            
                                                         
 
                                                     </table>

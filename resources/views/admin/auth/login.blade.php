@@ -8,16 +8,6 @@
 	<!-- Meta -->
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="author" content="DexignZone">
-	<meta name="robots" content="">
-
-	<meta name="keywords" content="accommodation, admin dashboard, admin template, apartment, booking, bootstrap 5, dinning, hostel, hotel booking, hotel template, motel, resort, restaurant, room">
-	<meta name="description" content="Innap is a clean-coded, responsive HTML template that can be easily customised to fit the needs of various hotel booking and hotel template, booking, dinning, hostel, and other businesses">
-
-	<meta property="og:title" content="Innap - Hotel Admin Dashboard Bootstrap Templates">
-	<meta property="og:description" content="Innap is a clean-coded, responsive HTML template that can be easily customised to fit the needs of various hotel booking and hotel template, booking, dinning, hostel, and other businesses">
-	<meta property="og:image" content="https://innap.dexignzone.com/xhtml/social-image.png">
-	<meta name="format-detection" content="telephone=no">
 
 	<!-- Mobile Specific -->
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -46,14 +36,15 @@
                                     @csrf
                                         <div class="mb-3">
                                             <label class="mb-1"><strong>Email</strong></label>
-                                            <input type="email" name="email" value="{{ old('email') }}" class="form-control" value="hello@example.com">
+                                            <!-- <input type="email" name="email" value="{{ old('email') }}" class="form-control" value="hello@example.com"> -->
+                                            <input type="email" name="email" value="admin@gmail.com" class="form-control" value="hello@example.com">
                                         </div>
                                         @if ($errors->has('email'))
                                         <code class="text-danger">{{ $errors->first('email') }}</code>
                                         @endif
                                         <div class="mb-3 position-relative">
                                             <label class="mb-1"><strong>Password</strong></label>
-											<input type="password" name="password"  id="password" class="form-control" value="123456">
+											<input type="password" name="password" id="password" class="form-control" value="Admin@123">
 											<span class="show-pass eye">
 											
 												<i class="fa fa-eye-slash"></i>

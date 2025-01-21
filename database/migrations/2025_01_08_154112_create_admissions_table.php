@@ -32,6 +32,7 @@ return new class extends Migration
             $table->string('email')->nullable(); // Email
             $table->string('state'); // State
             $table->string('city'); // City
+            $table->string('address'); // City
             $table->string('course_program'); // Course Program
 
             $table->string('start_session'); // Start Session

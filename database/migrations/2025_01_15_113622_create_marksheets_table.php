@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('center_id')->constrained('centers')->onDelete('cascade'); 
             $table->string('type'); 
             $table->json('subjects_data')->nullable();
+            $table->json('subjects_data2')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });

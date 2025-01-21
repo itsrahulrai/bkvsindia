@@ -49,13 +49,23 @@
                                     </div>
 
                                     <div class="col-md-4 mb-3">
-                                        <label for="roll_no" class="form-label">Course Name</label>
+                                        <label for="roll_no" class="form-label">Category Course</label>
                                         <input type="text" class="form-control" name="course_id " id="course_id "
-                                            value="{{ old('course_id ', $marksheet->course->name  ?? '') }}" readonly>
+                                            value="{{ old('course_id', $marksheet->course->name  ?? '') }}" readonly>
                                         @error('roll_no')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
+
+                                    <div class="col-md-4 mb-3">
+                                        <label for="roll_no" class="form-label">Courses</label>
+                                        <input type="text" class="form-control" name="subcourse_id " id="subcourse_id"
+                                            value="{{ old('subcourse_id', $subcourse->name  ?? '') }}" readonly>
+                                        @error('roll_no')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    
                                     <div class="col-md-4 mb-3">
                                         <label for="enroll_no" class="form-label">Student Name</label>
                                         <input type="text" class="form-control" name="student_name" id="student_name"

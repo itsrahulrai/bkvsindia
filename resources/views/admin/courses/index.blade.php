@@ -24,6 +24,7 @@ Dashboard
               <thead>
                 <tr>
                   <th>SI.NO</th>
+                  <th>Image</th>
                   <th>Category</th>
                   <th>Course Name</th>
                   <th>Duration</th>
@@ -37,6 +38,13 @@ Dashboard
                 @foreach ($courses as $key => $course)
                 <tr>
                   <td>{{ $key + 1 }}</td>
+                  <td>
+                      <img
+                          src="{{ asset($course->image ?? 'landscape-placeholder-svgrepo-com.svg') }}"
+                          class="img-fluid rounded w-100 h-auto"
+                          alt="Course Image"
+                      />
+                  </td>
                   <td>{{ $course->parent ? $course->parent->name : 'No Parent' }}</td>
                   <td>{{ $course->name }}</td>
                   <td>{{ $course->duration }}</td>

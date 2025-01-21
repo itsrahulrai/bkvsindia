@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admission;
+use App\Models\Center;
 use App\Models\Certificate;
 use App\Models\CourseDetail;
 use App\Models\Marksheet;
@@ -102,6 +103,8 @@ class MarksheetController extends Controller
     //     return view('admin.marksheets.first_year', compact('marksheet', 'courseDetails', 'totalMaximumMarks', 'totalMinimumMarks', 'subjectsData'));
     // }
 
+
+    
     public function firstYear($id)
     {
         try {
@@ -123,13 +126,22 @@ class MarksheetController extends Controller
                 'end_session_second',
                 'registration_date',
                 'course_id',
-                'course_program'
+                'course_id',
+                'subcourse_id'
             )->with(['course'])->findOrFail($id);
 
+            // $courseDetails = CourseDetail::with('subjects')
+            //     ->where('course_id', $marksheet->course_id)
+            //     ->where('semester', 1)
+            //     ->get();
+
             $courseDetails = CourseDetail::with('subjects')
-                ->where('course_id', $marksheet->course_id)
-                ->where('semester', 1)
-                ->get();
+            ->where('course_id', $marksheet->subcourse_id)
+            ->where('semester', 1)
+            ->get();
+
+                // dd($courseDetails);
+
 
             $totalMaximumMarks = 0;
             $totalMinimumMarks = 0;
@@ -209,8 +221,45 @@ public function secondYear($id)
 
 
 
-    public function certificate()
-    {
-        return view('admin.marksheets.certificate');
+
+
+
+
+
+
+public function certificate($id)
+{
+    try {
+        $certificate = Admission::select(
+            'id',
+            'center_id',
+            'photo',
+            'enroll_no',
+            'roll_no',
+            'student_name',
+            'father_name',
+            'mother_name',
+            'dob',
+            'start_session',
+            'end_session',
+            'registration_date',
+            'course_id',
+            'course_program'
+        )->with(['course'])->findOrFail($id);
+      
+        // dd($certificate);
+
+
+        $centerName = Center::where('id', $certificate->center_id)
+        ->select('institute_name')
+        ->first();
+        
+    
+
+        return view('admin.marksheets.certificate', compact('certificate','centerName'));
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Error generating certificate: ' . $e->getMessage());
     }
+}
+
 }

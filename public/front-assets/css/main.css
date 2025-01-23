@@ -8960,7 +8960,7 @@ textarea {
 
 @media (max-width: 1500px) {
     .courses__nav .courses-button-prev {
-        left: -15px;
+        left: 9px;
     }
 }
 
@@ -9027,7 +9027,7 @@ textarea {
 
 @media (max-width: 1500px) {
     .courses__nav .courses-button-next {
-        right: -15px;
+        right: 9px;
     }
 }
 

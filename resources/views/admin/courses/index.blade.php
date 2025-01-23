@@ -31,6 +31,7 @@ Dashboard
                   <th>Mode</th>
                   <th>Eligibility</th>
                   <th>Fees</th>
+                  <th>Levels</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -51,6 +52,7 @@ Dashboard
                   <td>{{ $course->mode }}</td>
                   <td>{{ $course->eligibility }}</td>
                   <td>{{ $course->fees }}</td>
+                  <td>{{ $course->skill_level }}</td>
                   <td>
                     <div class="d-flex">
                       <!-- Edit Button -->

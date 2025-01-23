@@ -11,4 +11,7 @@ Route::get('/user', function (Request $request) {
 
 Route::get('courses', [WebsiteApiController::class, 'courses'])->name('courses');
 Route::get('categories', [WebsiteApiController::class, 'categories'])->name('categories');
+Route::get('home-categories', [WebsiteApiController::class, 'Homecategories'])->name('home.categories');
+
+Route::get('slider-courses', [WebsiteApiController::class, 'sliderCourses'])->name('slider.courses');
 

@@ -65,22 +65,22 @@
                                     <li>
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" value=""
-                                                id="price_1">
-                                            <label class="form-check-label" for="price_1">All Price</label>
+                                                id="allprice">
+                                            <label class="form-check-label" for="All_Pric">All Price</label>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" value=""
-                                                id="price_2">
-                                            <label class="form-check-label" for="price_2">Free</label>
+                                                id="free">
+                                            <label class="form-check-label" for="Free">Free</label>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" value=""
-                                                id="price_3">
-                                            <label class="form-check-label" for="price_3">Paid</label>
+                                                id="paid">
+                                            <label class="form-check-label" for="Paid">Paid</label>
                                         </div>
                                     </li>
                                 </ul>
@@ -92,34 +92,31 @@
                                 <ul class="list-wrap">
                                     <li>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value=""
-                                                id="difficulty_1">
+                                            <input class="form-check-input" type="checkbox" value="" id="allskill">
                                             <label class="form-check-label" for="difficulty_1">All Skills</label>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value=""
-                                                id="difficulty_2">
-                                            <label class="form-check-label" for="difficulty_2">Beginner (55)</label>
+                                            <input class="form-check-input" type="checkbox" value="" id="beginner">
+                                            <label class="form-check-label" for="difficulty_2">Beginner <span id="beginnerCount">(0)</span></label>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value=""
-                                                id="difficulty_3">
-                                            <label class="form-check-label" for="difficulty_3">Intermediate
-                                                (22)</label>
+                                            <input class="form-check-input" type="checkbox" value="" id="intermediate">
+                                            <label class="form-check-label" for="difficulty_3">Intermediate <span id="intermediateCount">(0)</span></label>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value=""
-                                                id="difficulty_4">
-                                            <label class="form-check-label" for="difficulty_4">High (42)</label>
+                                            <input class="form-check-input" type="checkbox" value="" id="high">
+                                            <label class="form-check-label" for="difficulty_4">High <span id="highCount">(0)</span></label>
                                         </div>
                                     </li>
                                 </ul>
+
+
                             </div>
                         </div>
 

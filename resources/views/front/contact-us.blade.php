@@ -53,7 +53,7 @@
                                     </div>
                                     <div class="content">
                                         <h4 class="title">Address</h4>
-                                        <p>Awamileaug Drive, Kensington <br> London, UK</p>
+                                        <p> BKVS INDIA, Near Nathu Sweets, Vikas Marg, Opp Pillar No-52, Laxmi Nagar, New Delhi</p>
                                     </div>
                                 </li>
                                 <li>
@@ -62,8 +62,7 @@
                                     </div>
                                     <div class="content">
                                         <h4 class="title">Phone</h4>
-                                        <a href="tel:0123456789">+1 (800) 123 456 789</a>
-                                        <a href="tel:0123456789">+1 (800) 123 456 789</a>
+                                        <a href="tel:0123456789">+91 9999999999</a>
                                     </div>
                                 </li>
                                 <li>
@@ -72,8 +71,7 @@
                                     </div>
                                     <div class="content">
                                         <h4 class="title">E-mail Address</h4>
-                                        <a href="mailto:info@gmail.com">info@gmail.com</a>
-                                        <a href="mailto:info@gmail.com">info@gmail.com</a>
+                                        <a href="mailto:bkvsonline7@gmail.com">bkvsonline7@gmail.com</a>
                                     </div>
                                 </li>
                             </ul>

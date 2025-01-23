@@ -47,6 +47,7 @@ class CoursesController extends Controller
         ]);
 
         $photoPath = $this->uploadImage($request, 'image', 'uploads/courses');
+        $thumbnailPath = $this->uploadImage($request, 'thumbnail', 'uploads/courses');
 
         try {
             Course::create([
@@ -62,6 +63,7 @@ class CoursesController extends Controller
                 'skill_level' => $request->skill_level,
                 'price' => $request->price,
                 'image' => $photoPath,
+                'thumbnail' => $thumbnailPath,
             ]);
             session()->flash('success', 'Course created successfully!');
             return redirect()->back();
@@ -113,6 +115,11 @@ class CoursesController extends Controller
             $photoPath = $this->uploadImage($request, 'image', 'uploads/courses');
         }
 
+        $thumbnailPath = null;
+        if ($request->hasFile('thumbnail')) {
+            $thumbnailPath = $this->uploadImage($request, 'thumbnail', 'uploads/courses');
+        }
+
         try {
             $course = Course::findOrFail($id);
             $course->update([
@@ -128,6 +135,7 @@ class CoursesController extends Controller
                 'skill_level' => $request->skill_level,
                 'price' => $request->price,
                'image' => $photoPath ?? $course->image,
+               'thumbnail' => $thumbnailPath ?? $course->thumbnail,
             ]);
 
             session()->flash('success', 'Course updated successfully!');

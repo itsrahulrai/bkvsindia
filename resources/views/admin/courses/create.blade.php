@@ -106,6 +106,19 @@ Courses
                                         </div>
                                         @endif
                                     </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="image" class="form-label fs-5">Thumbnail Image</label>
+                                        <div class="input-group">
+                                            <input type="file" class="form-control" name="thumbnail" id="thumbnail" accept="image/*">
+                                        </div>
+
+                                        @if(isset($course) && $course->thumbnail)
+                                        <div class="mt-3">
+
+                                            <img src="{{ asset($course->thumbnail) }}" alt="Course Image" class="img-fluid rounded" width="150">
+                                        </div>
+                                        @endif
+                                    </div>
 
                                 </div>
 

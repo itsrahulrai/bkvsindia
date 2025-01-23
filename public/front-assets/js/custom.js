@@ -1,20 +1,54 @@
 /* ======= Retrieve the site URL from the meta tag ========== */
 const siteUrl = document.querySelector('meta[name="site-url"]').getAttribute("content");
 
-// Store selected categories
 let selectedCategories = [];
-let currentPage = 1; // Current page number
-const pageSize = 10; // Number of courses per page
+let selectedSkillLevels = [];
+let selectedPriceFilters = [];
 
-// Function to handle category checkbox changes
+let currentPage = 1; 
+const pageSize = 10; 
+
+/* ======= Function to handle price checkbox changes ========== */
+const handlePriceChange = (e) => {
+    const price = e.target.id; 
+    selectedPriceFilters = e.target.checked
+        ? [...selectedPriceFilters, price]
+        : selectedPriceFilters.filter(priceFilter => priceFilter !== price);
+
+    currentPage = 1;
+    fetchCourses(); 
+};
+
+// Attach event listeners to price checkboxes
+document.querySelector('#allprice').addEventListener('change', handlePriceChange); 
+document.querySelector('#free').addEventListener('change', handlePriceChange); 
+document.querySelector('#paid').addEventListener('change', handlePriceChange); 
+
+/* ======= Handle Skill Level Changes ========== */
+
+const handleSkillLevelChange = (e) => {
+    const skillLevelId = e.target.id;
+    selectedSkillLevels = e.target.checked
+        ? [...selectedSkillLevels, skillLevelId]
+        : selectedSkillLevels.filter(id => id !== skillLevelId);
+    currentPage = 1;
+    fetchCourses();
+};
+
+// Attach event listeners to skill level checkboxes
+const skillLevelCheckboxes = document.querySelectorAll('.form-check-input');
+skillLevelCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', handleSkillLevelChange);
+});
+
+/* ======= Handle Category Changes ========== */
 const handleCategoryChange = (e) => {
     const categoryId = e.target.id.replace('cat_', '');
     selectedCategories = e.target.checked
         ? [...selectedCategories, categoryId]
         : selectedCategories.filter(id => id !== categoryId);
-
-    currentPage = 1; // Reset to the first page when filters change
-    fetchCourses(); // Fetch filtered courses based on selected categories
+    currentPage = 1;
+    fetchCourses();
 };
 
 // Attach event listeners to category checkboxes
@@ -24,33 +58,36 @@ document.querySelector('#Categories').addEventListener('change', handleCategoryC
 const fetchCourses = async () => {
     try {
         const categoryQuery = selectedCategories.length ? `categories=${selectedCategories.join(',')}&` : '';
-        const response = await fetch(`${siteUrl}/api/courses?${categoryQuery}page=${currentPage}&limit=${pageSize}`);
-        const { courseCards, currentPage: serverPage, totalPages } = await response.json(); // Match backend keys
+        const skillLevelQuery = selectedSkillLevels.length ? `skill_levels=${selectedSkillLevels.join(',')}&` : '';
+        const priceQuery = selectedPriceFilters.length ? `price=${selectedPriceFilters.join(',')}&` : ''; 
+         
+        const response = await fetch(`${siteUrl}/api/courses?${categoryQuery}${skillLevelQuery}${priceQuery}page=${currentPage}&limit=${pageSize}`);
+        const { courseCards, currentPage: serverPage, totalPages,skillCounts } = await response.json();
 
         const coursesContainer = document.querySelector('.courses__grid-wrap');
-        coursesContainer.innerHTML = ''; // Clear previous results
+        coursesContainer.innerHTML = ''; 
 
         if (!courseCards || courseCards.length === 0) {
-            // Display custom error message if no courses are available
             coursesContainer.innerHTML = `
                 <div class="errorModule">
                     <div class="errorIcon">
                         <i class="fa fa-unlink"></i>
                     </div>
-                    <div class="errorMsg">Oops! No courses found for the selected categories. Try Again</div>
+                    <div class="errorMsg">Oops! No courses found for the selected filters. Try Again</div>
                 </div>
             `;
         } else {
-            // Display courses if available
             coursesContainer.innerHTML = courseCards.join('');
         }
-
-        // Update current page and render pagination controls
-        currentPage = serverPage; // Update current page from server response
+        
+        // Update skill level counts in the UI
+        document.querySelector('#beginnerCount').innerText = `(${skillCounts.beginner})`;
+        document.querySelector('#intermediateCount').innerText = `(${skillCounts.intermediate})`;
+        document.querySelector('#highCount').innerText = `(${skillCounts.high})`;
+        currentPage = serverPage;
         renderPagination(totalPages);
     } catch (error) {
         console.warn(error.message || error);
-        // Display generic error message if there's a fetch error
         const coursesContainer = document.querySelector('.courses__grid-wrap');
         coursesContainer.innerHTML = `
             <div class="errorModule">
@@ -66,52 +103,39 @@ const fetchCourses = async () => {
 /* ======= Render Pagination Controls ========== */
 const renderPagination = (totalPages) => {
     const paginationContainer = document.querySelector('.pagination-container');
-    paginationContainer.innerHTML = ''; // Clear any previous pagination links
+    paginationContainer.innerHTML = ''; 
 
-    if (totalPages <= 1) return; // Hide pagination if only one page
-
+    if (totalPages <= 1) return;
+    const createPaginationItem = (text, isDisabled, onClick) => {
+        const item = document.createElement('li');
+        item.classList.toggle('disabled', isDisabled);
+        item.innerHTML = `<a href="#">${text}</a>`;
+        if (!isDisabled) item.addEventListener('click', onClick);
+        return item;
+    };
+    const paginationWrap = document.createElement('nav');
+    paginationWrap.classList.add('pagination__wrap', 'mt-30');
     const paginationList = document.createElement('ul');
-    paginationList.classList.add('pagination');
+    paginationList.classList.add('list-wrap');
 
-    // "Previous" button
-    const prevItem = document.createElement('li');
-    prevItem.innerHTML = `<a href="#" class="${currentPage === 1 ? 'disabled' : ''}">←</a>`;
-    prevItem.addEventListener('click', (e) => {
+    paginationList.appendChild(createPaginationItem('←', currentPage === 1, (e) => {
         e.preventDefault();
-        if (currentPage > 1) {
-            currentPage--;
-            fetchCourses();
-        }
-    });
-    paginationList.appendChild(prevItem);
+        if (currentPage > 1) { currentPage--; fetchCourses(); }
+    }));
 
-    // Page numbers
     for (let page = 1; page <= totalPages; page++) {
-        const pageItem = document.createElement('li');
-        pageItem.innerHTML = `<a href="#" class="${page === currentPage ? 'active' : ''}">${page}</a>`;
-        pageItem.addEventListener('click', (e) => {
+        paginationList.appendChild(createPaginationItem(page, page === currentPage, (e) => {
             e.preventDefault();
-            if (currentPage !== page) {
-                currentPage = page;
-                fetchCourses();
-            }
-        });
-        paginationList.appendChild(pageItem);
+            if (currentPage !== page) { currentPage = page; fetchCourses(); }
+        }));
     }
-
-    // "Next" button
-    const nextItem = document.createElement('li');
-    nextItem.innerHTML = `<a href="#" class="${currentPage === totalPages ? 'disabled' : ''}">→</a>`;
-    nextItem.addEventListener('click', (e) => {
+    paginationList.appendChild(createPaginationItem('→', currentPage === totalPages, (e) => {
         e.preventDefault();
-        if (currentPage < totalPages) {
-            currentPage++;
-            fetchCourses();
-        }
-    });
-    paginationList.appendChild(nextItem);
+        if (currentPage < totalPages) { currentPage++; fetchCourses(); }
+    }));
 
-    paginationContainer.appendChild(paginationList);
+    paginationWrap.appendChild(paginationList);
+    paginationContainer.appendChild(paginationWrap);
 };
 
 /* ======= Fetch Categories ========== */
@@ -143,9 +167,18 @@ const renderCategories = (allCategories) => {
 
 document.querySelector('#ShowMoreLink').addEventListener('click', (e) => {
     e.preventDefault();
-    fetchCategories(); // Load next batch of categories when clicked
+    fetchCategories();
 });
+
+
+
+
+
 
 // Initial fetch
 fetchCategories();
 fetchCourses();
+
+
+
+

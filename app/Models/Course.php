@@ -15,6 +15,7 @@ class Course extends Model
         'slug',
         'duration',
         'image',
+        'thumbnail',
         'content',
         'sidecontent',
         'mode',

@@ -25,7 +25,14 @@ Route::post('online-admission/store', [AdmissionController::class, 'store'])->na
 
 Route::post('franchise-apply', [FranchiseApplyController::class, 'franchiseApply'])->name('franchise.apply');
 
-Route::get('all-courses', [CoursesDisplayController::class, 'index'])->name('all-courses');
+// Route::get('all-courses', [CoursesDisplayController::class, 'index'])->name('all-courses');
+
+
+Route::get('courses/{slug}', [CoursesDisplayController::class, 'courseDetails'])->name('course-details');
+
+// Route::get('courses/course-details/{slug}', function(){
+//     return view('front.courses.course-details');
+// })->name('course-details');
 
 
 // Courses Route
@@ -113,9 +120,7 @@ Route::get('disclaimer-center', function () {
 })->name('disclaimer-center');
 
 
-Route::get('courses/course-details/{slug}', function(){
-    return view('front.courses.course-details');
-})->name('course-details');
+
 
 // Certificate
 

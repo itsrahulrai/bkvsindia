@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('eligibility')->nullable(); 
             $table->string('fees')->nullable();  
             $table->string('image')->nullable();  
+            $table->string('thumbnail')->nullable();  
             $table->longText('content')->nullable();  
             $table->longText('sidecontent')->nullable();  
             $table->enum('status', ['active', 'inactive'])->default('active');

@@ -17,49 +17,15 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $casts = [
-        'social_media_visibility' => 'array',
-    ];
+   
     // User.php (Model)
     protected $fillable = [
-        'user_type',
         'name',
         'email',
+        'password', 
         'mobile',
-        'profession',
-        'age',
-        'dob',
-        'facebook',
-        'linkedin',
-        'youtube',
-        'instagram',
-        'social_media_visibility',
-        'twitter',
-        'about',
-        'weight',
-        'father_name',
-        'mother_name',
-        'image',
-        'country_id',
-        'state_id',
-        'city_id',
-        'gender',
-        'seeking',
-        'username',
-        'password',
-        'height',
-        'bodytype',
-        'relationship_status',
-        'have_kids',
-        'want_kids',
-        'your_education',
-        'you_smoke',
-        'you_drink',
-        'ethnicities',
-        'religion',
-        'interest',
         'role',
-        'status', 
+        'status',
     ];
 
 
@@ -96,38 +62,6 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
-
-
-    public function country()
-    {
-        return $this->belongsTo(Country::class);
-    }
-
-    public function state()
-    {
-        return $this->belongsTo(State::class);
-    }
-
-    public function city()
-    {
-        return $this->belongsTo(City::class);
-    }
-    public function gallery()
-    {
-        return $this->hasMany(Gallery::class);
-    }
-
-    public function getStatusAttribute($value)
-    {
-        return ucfirst($value);
-    }
-
-    public function purchasePlans()
-    {
-        return $this->hasMany(PurchasePlan::class);
-    }
-
 
 
 }

@@ -1,4 +1,6 @@
 @extends('admin.layouts.master')
+<!-- @extends(auth()->guard('frenchies')->check() ? 'frenchies.layouts.master' : 'admin.layouts.master') -->
+
 @section('title')
 Apply For Center
 @endsection
@@ -20,11 +22,21 @@ Apply For Center
                            <i class="bi bi-building" style="color: #EC6923;"></i> Center Details
                         </h4>
                         <hr>
-                        <form action="{{ isset($centers) ? route('admin.center.update', $centers->id) : route('admin.center.store') }}" method="POST" enctype="multipart/form-data">
-    @csrf
-    @if(isset($centers))
-        @method('PUT')
-    @endif
+                        <form action="{{ isset($centers) 
+                                ? (auth()->guard('frenchies')->check() 
+                                    ? route('frenchies.center.update', $centers->id) 
+                                    : route('admin.center.update', $centers->id)) 
+                                : (auth()->guard('frenchies')->check() 
+                                    ? route('frenchies.center.store') 
+                                    : route('admin.center.store')) }}" 
+                                method="POST" enctype="multipart/form-data">
+                                @csrf
+                                @if(isset($centers))
+                                    @method('PUT')
+                                @endif
+
+
+
 
     <div class="row">
         <!-- Left side inputs -->

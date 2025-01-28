@@ -2,19 +2,35 @@
 
 use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\FrenchiesController;
+use App\Http\Controllers\Frenchies\FrenchiesLoginController;
 use App\Http\Controllers\Frontend\AdmissionController;
 use App\Http\Controllers\Frontend\CoursesDisplayController;
 use App\Http\Controllers\Frontend\FranchiseApplyController;
 use Illuminate\Support\Facades\Route;
-
-// Route::get('/', function () {
-//     return view('front/index');
-// })->name('home');
-
+use App\Http\Controllers\Users\AdmissionLoginController;
+use App\Http\Controllers\Users\UserDashboardController;
+use App\Http\Controllers\Users\StudentLoginController;
 
 
+// Student Login
+Route::post('student/login', [StudentLoginController::class, 'login'])->name('student.login');
+// Frenchies Login
+Route::post('frenchies/login', [FrenchiesLoginController::class, 'login'])->name('frenchies.login');
 
-// Student ZONE
+Route::middleware(['auth:student'])->prefix('student')->name('student.')->group(function () {
+    Route::get('dashboard', [StudentLoginController::class, 'dashboard'])->name('dashboard');
+    Route::get('my-profile', [UserDashboardController::class, 'myProfile'])->name('my-profile');
+    Route::get('id-card', [UserDashboardController::class, 'idCard'])->name('id-card');
+    Route::get('setting', [UserDashboardController::class, 'setting'])->name('setting');
+    Route::put('update/{id}', [UserDashboardController::class, 'updateProfile'])->name('update');
+    Route::post('update-password', [UserDashboardController::class, 'updatePassword'])->name('password.update');
+    Route::post('logout', [StudentLoginController::class, 'logout'])->name('logout');
+    Route::get('student/result', [UserDashboardController::class, 'result'])->name('result');
+
+    Route::get('marksheet/1st-year/{id}', [UserDashboardController::class, 'firstYear'])->name('marksheets.firstYear');
+    Route::get('marksheet/2nd-year/{id}', [UserDashboardController::class, 'secondYear'])->name('marksheets.secondYear');
+
+});
 
 
 
@@ -65,13 +81,8 @@ Route::get('contact-us', function () {
 })->name('contact-us');
 
 
-Route::get('student/dashboard', function () {
-    return view('front.user.dashboard');
-})->name('user-dashboard');
 
-Route::get('student/my-profile', function () {
-    return view('front.user.my-profile');
-})->name('my-profile');
+
 
 Route::get('student/enrolled-courses', function () {
     return view('front.user.enrolled-courses');
@@ -81,13 +92,9 @@ Route::get('student/certificate', function () {
     return view('front.user.certificate');
 })->name('certificate');
 
-Route::get('student/result', function () {
-    return view('front.user.result');
-})->name('result');
 
-Route::get('student/id-card', function () {
-    return view('front.user.id-card');
-})->name('id-card');
+
+
 
 Route::get('student/admin-card', function () {
     return view('front.user.admit-card');

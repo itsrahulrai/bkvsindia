@@ -16,7 +16,7 @@
 
     {{-- Header link End --}}
 
-
+@stack('style')
 </head>
 
 <body>

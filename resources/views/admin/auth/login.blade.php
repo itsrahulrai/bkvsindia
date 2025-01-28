@@ -37,7 +37,7 @@
                                         <div class="mb-3">
                                             <label class="mb-1"><strong>Email</strong></label>
                                             <!-- <input type="email" name="email" value="{{ old('email') }}" class="form-control" value="hello@example.com"> -->
-                                            <input type="email" name="email" value="admin@gmail.com" class="form-control" value="hello@example.com">
+                                            <input type="text" name="email" value="admin@gmail.com" class="form-control" value="hello@example.com">
                                         </div>
                                         @if ($errors->has('email'))
                                         <code class="text-danger">{{ $errors->first('email') }}</code>

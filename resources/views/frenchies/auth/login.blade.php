@@ -42,18 +42,18 @@
 										<a href="index.html"><img src="{{asset('assets/admin/images/bkvsindia.png')}}" class="light-login" alt=""></a>
 									</div>
                                     <h4 class="text-center mb-4">Sign in your account</h4>
-                                    <form  method="POST" action="{{ route('login') }}">
+                                    <form  method="POST" action="{{ route('frenchies.login') }}">
                                     @csrf
                                         <div class="mb-3">
-                                            <label class="mb-1"><strong>Email</strong></label>
-                                            <input type="email" name="email" value="{{ old('email') }}" class="form-control" value="hello@example.com">
+                                            <label class="mb-1"><strong>Center Code</strong></label>
+                                            <input type="text" name="center_code" value="{{ old('center_code') }}" class="form-control">
                                         </div>
                                         @if ($errors->has('email'))
                                         <code class="text-danger">{{ $errors->first('email') }}</code>
                                         @endif
                                         <div class="mb-3 position-relative">
                                             <label class="mb-1"><strong>Password</strong></label>
-											<input type="password" name="password"  id="password" class="form-control" value="123456">
+											<input type="text" name="center_code"  id="center_code" class="form-control" >
 											<span class="show-pass eye">
 											
 												<i class="fa fa-eye-slash"></i>

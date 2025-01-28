@@ -166,60 +166,60 @@ class CenterController extends Controller
     // }
 
     public function update(Request $request, $id)
-{
-    $request->validate([
-        'institute_name' => 'required',
-        'director' => 'required',
-        'phone' => 'required|numeric|digits:10',
-        'mobile' => 'required|numeric|digits:10',
-        'email' => 'required|email',
-        'state' => 'required|string',
-        'city' => 'required|string|max:100',
-        'pincode' => 'required|numeric|digits:6',
-        'website' => 'nullable|url',
-    ]);
-
-    try {
-        $center = Center::findOrFail($id);
-
-        // Update center_code only if it's null
-        if (is_null($center->center_code)) {
-            $centerCode = centerCode();
-            $center->center_code = $centerCode;
-        }
-
-        // Check if there's a new certificate image to upload
-        $photoPath = $request->hasFile('certificateImage') ? $this->uploadImage($request, 'certificateImage', 'uploads/images') : $center->certificateImage;
-
-        // Update the center record
-        $center->update([
-            'institute_name' => $request->institute_name,
-            'director' => $request->director,
-            'phone' => $request->phone,
-            'mobile' => $request->mobile,
-            'website' => $request->website,
-            'email' => $request->email,
-            'state' => $request->state,
-            'city' => $request->city,
-            'pincode' => $request->pincode,
-            'address' => $request->address,
-            'address1' => $request->address1,
-            'number_of_lab_rooms' => $request->number_of_lab_rooms,
-            'space_available' => $request->space_available,
-            'certificate' => $request->certificate,
-            'certificateImage' => $photoPath,
-            'date' => $request->date,
-            'message' => $request->message,
-            'status' => $request->status, // Assuming you want to allow updating the status as well
+    {
+        $request->validate([
+            'institute_name' => 'required',
+            'director' => 'required',
+            'phone' => 'required|numeric|digits:10',
+            'mobile' => 'required|numeric|digits:10',
+            'email' => 'required|email',
+            'state' => 'required|string',
+            'city' => 'required|string|max:100',
+            'pincode' => 'required|numeric|digits:6',
+            'website' => 'nullable|url',
         ]);
 
-        session()->flash('success', 'Center updated successfully!');
-        return redirect()->back();
-    } catch (\Exception $e) {
-        Log::error('Error updating Center: ' . $e->getMessage());
-        return redirect()->back()->withErrors('Error updating Center: ' . $e->getMessage());
+        try {
+            $center = Center::findOrFail($id);
+
+            // Update center_code only if it's null
+            if (is_null($center->center_code)) {
+                $centerCode = centerCode();
+                $center->center_code = $centerCode;
+            }
+
+            // Check if there's a new certificate image to upload
+            $photoPath = $request->hasFile('certificateImage') ? $this->uploadImage($request, 'certificateImage', 'uploads/images') : $center->certificateImage;
+
+            // Update the center record
+            $center->update([
+                'institute_name' => $request->institute_name,
+                'director' => $request->director,
+                'phone' => $request->phone,
+                'mobile' => $request->mobile,
+                'website' => $request->website,
+                'email' => $request->email,
+                'state' => $request->state,
+                'city' => $request->city,
+                'pincode' => $request->pincode,
+                'address' => $request->address,
+                'address1' => $request->address1,
+                'number_of_lab_rooms' => $request->number_of_lab_rooms,
+                'space_available' => $request->space_available,
+                'certificate' => $request->certificate,
+                'certificateImage' => $photoPath,
+                'date' => $request->date,
+                'message' => $request->message,
+                'status' => $request->status, // Assuming you want to allow updating the status as well
+            ]);
+
+            session()->flash('success', 'Center updated successfully!');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            Log::error('Error updating Center: ' . $e->getMessage());
+            return redirect()->back()->withErrors('Error updating Center: ' . $e->getMessage());
+        }
     }
-}
 
 
     /**

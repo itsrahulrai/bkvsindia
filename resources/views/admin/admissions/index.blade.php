@@ -13,9 +13,28 @@ Admissions
       <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
           <h4 class="card-title">Admissions </h4>
-          <a href="{{route('admin.admission.create')}}"  class="btn btn-rounded btn-danger"><span
+          <!-- <a href="{{route('admin.admission.create')}}"  class="btn btn-rounded btn-danger"><span
                                         class="btn-icon-start text-info"><i class="fa fa-plus color-danger"></i>
-                                    </span>Add</a>
+                                    </span>Add</a> -->
+
+          @if (auth()->guard('frenchies')->check())
+          <!-- Display for center users (Frenchies) -->
+          <a href="{{ route('frenchies.admission.create') }}" class="btn btn-rounded btn-danger">
+            <span class="btn-icon-start text-info">
+              <i class="fa fa-plus color-danger"></i>
+            </span>
+            Add
+          </a>
+          @else
+          <!-- Display for admins -->
+          <a href="{{ route('admin.admission.create') }}" class="btn btn-rounded btn-danger">
+            <span class="btn-icon-start text-info">
+              <i class="fa fa-plus color-danger"></i>
+            </span>
+            Add
+          </a>
+          @endif
+
         </div>
 
         <div class="card-body">
@@ -49,41 +68,43 @@ Admissions
                   <td>{{ $admission->registration_date }}</td>
                   <td>
                     <div class="mb-3 col-md-12">
-                        <select id="inputState" class="default-select form-control wide change-status" name="status" data-id="{{ $admission->id }}">
-                            <option value="active" {{ old('status', $admission->status ?? 'pending') === 'active' ? 'selected' : '' }}>Active</option>
-                            <option value="inactive" {{ old('status', $admission->status ?? 'pending') === 'inactive' ? 'selected' : '' }}>Inactive</option>
-                        </select>
+                      <select id="inputState" class="default-select form-control wide change-status" name="status" data-id="{{ $admission->id }}">
+                        <option value="active" {{ old('status', $admission->status ?? 'pending') === 'active' ? 'selected' : '' }}>Active</option>
+                        <option value="inactive" {{ old('status', $admission->status ?? 'pending') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                      </select>
                     </div>
                   </td>
 
-                  
                   <td>
-                    <div class="d-flex">
-                      <!-- Generate Certificate Buttons -->
-                      @if ($admission->course_program === 'one_year')
-                          <!-- Display button for generating certificate for one-year program -->
-                          <a href="{{ route('admin.generateMarksheetOneYear', $admission->id) }}" class="btn btn-success shadow btn-sm me-2" title="Generate 1st Marksheet">
-                              <i class="fas fa-file-alt fs-7"></i>
-                          </a>
-                      @elseif ($admission->course_program === 'two_year')
-                          <!-- Display both buttons for generating certificates for two-year program -->
-                          <a href="{{ route('admin.generateMarksheetOneYear', $admission->id) }}" class="btn btn-success shadow btn-sm me-2" title="Generate 1st Marksheet">
-                              <i class="fas fa-file-alt fs-7"></i>
-                          </a>
-                          <a href="{{ route('admin.generateMarksheetTwoYear', $admission->id) }}" class="btn btn-success shadow btn-sm me-2" title="Generate 2nd Marksheet">
-                              <i class="fas fa-file-alt fs-7"></i>
-                          </a>
-                      @endif
+                  <div class="d-flex">
+                    <!-- Generate Certificate Buttons -->
+                    @if (!auth()->guard('frenchies')->check()) 
+                        <!-- Only display for admins -->
+                        @if ($admission->course_program === 'one_year')
+                            <!-- Display button for generating certificate for one-year program -->
+                            <a href="{{ route('admin.generateMarksheetOneYear', $admission->id) }}" class="btn btn-success shadow btn-sm me-2" title="Generate 1st Marksheet">
+                                <i class="fas fa-file-alt fs-7"></i>
+                            </a>
+                        @elseif ($admission->course_program === 'two_year')
+                            <!-- Display both buttons for generating certificates for two-year program -->
+                            <a href="{{ route('admin.generateMarksheetOneYear', $admission->id) }}" class="btn btn-success shadow btn-sm me-2" title="Generate 1st Marksheet">
+                                <i class="fas fa-file-alt fs-7"></i>
+                            </a>
+                            <a href="{{ route('admin.generateMarksheetTwoYear', $admission->id) }}" class="btn btn-success shadow btn-sm me-2" title="Generate 2nd Marksheet">
+                                <i class="fas fa-file-alt fs-7"></i>
+                            </a>
+                        @endif
+                    @endif
 
                       <!-- Edit Button -->
                       <a href="{{ route('admin.admission.edit', $admission->id ) }}" class="btn btn-primary shadow btn-sm me-2" title="Edit Course">
-                        <i class="fas fa-edit fs-7"></i>
+                          <i class="fas fa-edit fs-7"></i>
                       </a>
+                      
                       <!-- Delete Button -->
                       <a href="{{ route('admin.admission.destroy', $admission->id ) }}" class="btn btn-danger shadow btn-sm delete-item" title="Delete Course">
-                        <i class="fas fa-trash-alt fs-7"></i>
+                          <i class="fas fa-trash-alt fs-7"></i>
                       </a>
-                      </form>
                     </div>
 
                   </td>
@@ -102,18 +123,21 @@ Admissions
 @endsection
 @push('script')
 <script>
-    $(document).ready(function(){
-        $('body').on('change', '.change-status', function(){
-            let selectedStatus = $(this).val();
-            let id = $(this).data('id'); 
-            $.ajax({
-                url: "{{ route('admin.admission.change-status') }}",
-                method: 'PUT',
-                data: { status: selectedStatus, id: id },
-                success: () => Swal.fire('Success', 'Status has been updated!', 'success'),
-                error: () => Swal.fire('Error', 'Failed to update status.', 'error')
-            });
-        });
+  $(document).ready(function() {
+    $('body').on('change', '.change-status', function() {
+      let selectedStatus = $(this).val();
+      let id = $(this).data('id');
+      $.ajax({
+        url: "{{ route('admin.admission.change-status') }}",
+        method: 'PUT',
+        data: {
+          status: selectedStatus,
+          id: id
+        },
+        success: () => Swal.fire('Success', 'Status has been updated!', 'success'),
+        error: () => Swal.fire('Error', 'Failed to update status.', 'error')
+      });
     });
+  });
 </script>
 @endpush

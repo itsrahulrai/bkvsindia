@@ -3,12 +3,19 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
-class Admission extends Model
+class Admission extends Authenticatable
 {
-    use HasFactory;
+    use HasApiTokens, HasFactory, Notifiable;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'center_id',
         'student_name',
@@ -57,18 +64,36 @@ class Admission extends Model
         'graduation_image',
         'post_graduation_image',
         'id_proof',
-        'other_document'
+        'other_document',
     ];
 
-      // Define relationship with Center
-      public function center()
-      {
-          return $this->belongsTo(Center::class);
-      }
-  
-      // Define relationship with Course
-      public function course()
-      {
-          return $this->belongsTo(Course::class);
-      }
+    /**
+     * Define the relationship with the Center model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function center()
+    {
+        return $this->belongsTo(Center::class);
+    }
+
+    /**
+     * Define the relationship with the Course model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function course()
+    {
+        return $this->belongsTo(Course::class,'subcourse_id');
+    }
+
+    /**
+     * Override the method to specify the password field for authentication.
+     *
+     * @return string
+     */
+    public function getAuthPassword()
+    {
+        return $this->dob;
+    }
 }

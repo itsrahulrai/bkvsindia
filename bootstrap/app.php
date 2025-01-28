@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\AdmissionAuthMiddleware;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -19,16 +20,24 @@ return Application::configure(basePath: dirname(__DIR__))
                 ->name('admin.')
                 ->group(base_path('routes/admin.php'));
             //User Route
-            Route::middleware(['web', 'auth', 'role:user'])
+            // Route::middleware(['web', 'auth', 'role:user'])
+            //     ->prefix('user')
+            //     ->name('user.')
+            //     ->group(base_path('routes/user.php'));
+
+            // User Route
+            Route::middleware(['web', 'auth','role:user']) // Add admission and role middleware
                 ->prefix('user')
                 ->name('user.')
                 ->group(base_path('routes/user.php'));
 
             //frenchies Route
-            Route::middleware(['web', 'auth', 'role:frenchies'])
-                ->prefix('frenchies')
-                ->name('frenchies.')
-                ->group(base_path('routes/frenchies.php'));
+            Route::middleware(['web', 'auth:frenchies'])
+            ->prefix('frenchies')
+            ->name('frenchies.')
+            ->group(base_path('routes/frenchies.php'));
+         
+        
             //api Route
             Route::middleware('api')
                 ->prefix('api')
@@ -38,7 +47,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'role' => RoleMiddleware::class
+            'role' => RoleMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {})->create();

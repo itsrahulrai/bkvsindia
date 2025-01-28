@@ -21,6 +21,23 @@
                                     <h4 class="title">Result</h4>
                                 </div>
 
+                              <!-- Buttons to toggle marksheets -->
+                                <div class="d-flex justify-content-center align-items-center mb-3 gap-3">
+                                    @if ($courseProgram === 'one_year')
+                                        <a href="{{ route('student.marksheets.firstYear', $student->id) }}" class="btn btn-primary d-flex align-items-center gap-2" id="marksheet1Button">
+                                            <i class="fas fa-file-alt"></i> Marksheet 1
+                                        </a>
+                                    @elseif ($courseProgram === 'two_year')
+                                        <a href="{{ route('student.marksheets.firstYear', $student->id) }}" class="btn btn-primary d-flex align-items-center gap-2" id="marksheet1Button">
+                                            <i class="fas fa-file-alt"></i> Marksheet 1
+                                        </a>
+                                        <a href="{{ route('student.marksheets.secondYear', $student->id) }}" class="btn btn-secondary d-flex align-items-center gap-2" id="marksheet2Button">
+                                            <i class="fas fa-file-alt"></i> Marksheet 2
+                                        </a>
+                                    @endif
+                                </div>
+
+
                             </div>
                         </div>
                     </div>
@@ -31,5 +48,7 @@
 
     </main>
 
+@endsection
 
+@section('script')
 @endsection

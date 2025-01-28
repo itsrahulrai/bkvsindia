@@ -298,20 +298,21 @@ class GenrateMarksheetController extends Controller
         try {
             $marksheet = Admission::with('course:id,name')
                 ->select([
-                    'id', 'center_id', 'enroll_no', 'roll_no', 'student_name',
+                    'id', 'center_id','enroll_no', 'roll_no', 'student_name',
                     'father_name', 'mother_name', 'dob', 'start_session', 
                     'end_session', 'registration_date', 'course_id', 
                     'subcourse_id', 'course_program'
                 ])
                 ->findOrFail($id);
 
-            $subcourse = Course::find($marksheet->subcourse_id);
 
+            $courseCat = Course::find($marksheet->course_id);
+            $subcourse = Course::find($marksheet->subcourse_id);
             $semesterOne = CourseDetail::with('subjects')
                 ->where(['course_id' => $marksheet->subcourse_id, 'semester' => 1])
                 ->get();
 
-            return view('admin.genratemarksheet.one_marksheet', compact('marksheet', 'semesterOne', 'subcourse'));
+            return view('admin.genratemarksheet.one_marksheet', compact('marksheet', 'semesterOne', 'subcourse','courseCat'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Error generating marksheet: ' . $e->getMessage());
         }
@@ -321,28 +322,26 @@ class GenrateMarksheetController extends Controller
     public function generateMarksheetTwoYear($id)
     {
         try {
-            $marksheet = Admission::select(
-                'id',
-                'center_id',
-                'enroll_no',
-                'roll_no',
-                'student_name',
-                'father_name',
-                'mother_name',
-                'dob',
-                'start_session',
-                'end_session',
-                'registration_date',
-                'course_id',
-                'course_program'
-            )->with(['course'])->findOrFail($id);
+            $marksheet = Admission::with('course:id,name')
+            ->select([
+                'id', 'center_id','enroll_no', 'roll_no', 'student_name',
+                'father_name', 'mother_name', 'dob', 'start_session', 
+                'end_session', 'registration_date', 'course_id', 
+                'subcourse_id', 'course_program'
+            ])
+            ->findOrFail($id);
+            
+            $courseCat = Course::find($marksheet->course_id);
+            $subcourse = Course::find($marksheet->subcourse_id);
+
             $semesterTwo = CourseDetail::with('subjects')
-                ->where('course_id', $marksheet->course_id)
+                ->where('course_id', $marksheet->subcourse_id)
                 ->where('semester', 2) // Filter for semester 2
                 ->get();
 
 
-            return view('admin.genratemarksheet.two_marksheet', compact('marksheet', 'semesterTwo'));
+
+            return view('admin.genratemarksheet.two_marksheet', compact('marksheet', 'semesterTwo','courseCat','subcourse'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Error generating certificate: ' . $e->getMessage());
         }

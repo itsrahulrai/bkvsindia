@@ -1,4 +1,6 @@
 @extends('admin.layouts.master')
+<!-- @extends(auth()->guard('frenchies')->check() ? 'frenchies.layouts.master' : 'admin.layouts.master') -->
+
 @section('title')
 Centers
 @endsection
@@ -60,17 +62,26 @@ Centers
 
                   
                   <td>
-                    <div class="d-flex">
-                      <!-- Edit Button -->
-                      <a href="{{ route('admin.center.edit', $center->id ) }}" class="btn btn-primary shadow btn-sm me-2" title="Edit Course">
+                  <div class="d-flex">
+                    <!-- Edit Button -->
+                    <a href="{{ auth()->guard('frenchies')->check() 
+                                ? route('frenchies.center.edit', $center->id) 
+                                : route('admin.center.edit', $center->id) }}" 
+                      class="btn btn-primary shadow btn-sm me-2" 
+                      title="Edit Center">
                         <i class="fas fa-edit fs-7"></i>
-                      </a>
-                      <!-- Delete Button -->
-                      <a href="{{ route('admin.center.destroy', $center->id ) }}" class="btn btn-danger shadow btn-sm delete-item" title="Delete Course">
+                    </a>
+
+                    <!-- Delete Button -->
+                    <a href="{{ auth()->guard('frenchies')->check() 
+                                ? route('frenchies.center.destroy', $center->id) 
+                                : route('admin.center.destroy', $center->id) }}" 
+                      class="btn btn-danger shadow btn-sm delete-item" 
+                      title="Delete Center">
                         <i class="fas fa-trash-alt fs-7"></i>
-                      </a>
-                      </form>
-                    </div>
+                    </a>
+                </div>
+
 
                   </td>
                 </tr>

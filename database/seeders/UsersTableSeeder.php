@@ -25,7 +25,7 @@ class UsersTableSeeder extends Seeder
                 'name' => 'student',
                 'email' => 'student@gmail.com',
                 'password' => bcrypt('student@123'),
-                'role' => 'student',
+                'role' => 'user',
                 'status' => 'active',
 
             ],

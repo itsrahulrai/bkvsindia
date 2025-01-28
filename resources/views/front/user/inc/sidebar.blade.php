@@ -5,37 +5,19 @@
     <nav class="dashboard__sidebar-menu">
         <ul class="list-wrap">
             <li class="active">
-                <a href="{{ route('user-dashboard') }}">
+                <a href="{{route('student.dashboard')}}">
                     <i class="fas fa-home"></i>
                     Dashboard
                 </a>
             </li>
             <li>
-                <a href="{{route('my-profile')}}">
+                <a href="{{route('student.my-profile')}}">
                     <i class="skillgro-avatar"></i>
                     My Profile
                 </a>
             </li>
             <li>
-                <a href="{{route('enrolled')}}">
-                    <i class="skillgro-book"></i>
-                    Enrolled Courses
-                </a>
-            </li>
-            <li>
-                <a href="{{route('certificate')}}">
-                    <i class="skillgro-certificate"></i>
-                    Certificate
-                </a>
-            </li>
-            <li>
-                <a href="{{route('result')}}">
-                    <i class="skillgro-certificate"></i>
-                    Result
-                </a>
-            </li>
-            <li>
-                <a href="{{route('id-card')}}">
+                <a href="{{route('student.id-card')}}">
                     <i class="skillgro-book-2"></i>
                     ID Card
                 </a>
@@ -46,6 +28,14 @@
                     Admit Card
                 </a>
             </li>
+            <li>
+                <a href="{{route('student.result')}}">
+                    <i class="skillgro-certificate"></i>
+                    Result
+                </a>
+            </li>
+          
+           
         </ul>
     </nav>
     <div class="dashboard__sidebar-title mt-30 mb-20">
@@ -59,12 +49,16 @@
                     Settings
                 </a>
             </li>
-            <li>
-                <a href="">
-                    <i class="skillgro-logout"></i>
-                    Logout
-                </a>
-            </li>
+            <form method="POST" action="{{ route('student.logout') }}" id="logout-form">
+    @csrf
+    <li>
+        <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            <i class="skillgro-logout"></i>
+            Logout
+        </a>
+    </li>
+</form>
+
         </ul>
     </nav>
 </div>

@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+@extends('frenchies.layouts.master')
 @section('title')
 Dashboard
 @endsection

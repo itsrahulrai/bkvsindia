@@ -40,7 +40,17 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'student' => [
+            'driver' => 'session',
+            'provider' => 'students',
+        ],
+        'frenchies' => [
+            'driver' => 'session',
+            'provider' => 'frenchies',
+        ],
     ],
+
+
 
     /*
     |--------------------------------------------------------------------------
@@ -64,13 +74,24 @@ return [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
+        'students' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admission::class,
+        ],
+        'frenchies' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Center::class,
+        ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'users' => [
+            'driver' => 'database',
+            'table' => 'users',
+        ],
     ],
 
+  
+
+    
     /*
     |--------------------------------------------------------------------------
     | Resetting Passwords

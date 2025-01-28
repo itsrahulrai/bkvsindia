@@ -355,7 +355,7 @@
                 </div>
                 <div class="col-lg-2 col-md-4 col-6">
                     <div class="categories__item-four shine__animate-item">
-                        <a href="{{route('user-dashboard')}}" class="shine__animate-link">
+                        <a href="" class="shine__animate-link">
                             <img src="{{ asset('front-assets/img/icons/card.png') }}" alt="img">
                             <span class="name">Result Card</span>
                         </a>

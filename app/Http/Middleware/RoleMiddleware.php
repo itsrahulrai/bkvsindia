@@ -23,6 +23,7 @@ class RoleMiddleware
         }
 
         $user = Auth::user();
+       
         if ($user->role != $role) {
             if ($user->role == 'admin') {
                 return redirect()->route('admin.dashboard');
@@ -36,20 +37,31 @@ class RoleMiddleware
         return $next($request);
     }
 
-    // public function handle(Request $request, Closure $next)
+  
+    
+    // public function handle(Request $request, Closure $next, $role)
     // {
-    //     if (Auth::check()) {
-    //         $user = Auth::user();
+    //     if (!Auth::check()) {
+    //         return redirect('login'); // Redirect unauthenticated users to login
+    //     }
 
-    //         if ($user->role == 'admin') {
-    //             return redirect()->route('admin.dashboard');
-    //         } elseif ($user->role == 'frenchies') {
-    //             return redirect()->route('frenchies.dashboard');
-    //         } else {
-    //             return redirect()->route('user.dashboard');
+    //     $user = Auth::user();
+
+    //     if ($user->role !== $role) {
+    //         switch ($user->role) {
+    //             case 'admin':
+    //                 return redirect()->route('admin.dashboard');
+    //             case 'user': // Redirect `user` role to user dashboard
+    //                 return redirect()->route('user.dashboard');
+    //             case 'frenchies':
+    //                 return redirect()->route('frenchies.dashboard');
+    //             default:
+    //                 Auth::logout();
+    //                 return redirect('login')->withErrors(['role' => 'Unauthorized role.']);
     //         }
     //     }
 
-    //     return $next($request);
+    //     return $next($request); // Proceed if role matches
     // }
+
 }

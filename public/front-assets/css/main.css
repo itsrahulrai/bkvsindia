@@ -22511,7 +22511,7 @@ blockquote>p {
     margin-bottom: 10px;
     font-weight: 600;
     text-transform: capitalize;
-    color: var(--tg-heading-color);
+    color: #000;
     font-family: var(--tg-heading-font-family);
 }
 
@@ -22524,7 +22524,7 @@ blockquote>p {
     line-height: 23px;
     padding: 10px 20px;
     font-size: 14px;
-    color: var(--tg-heading-color);
+    color: #000;
     height: 50px;
     display: block;
     transition: 0.3s ease-in-out;

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -468,8 +469,7 @@
 
                                                       
 
-                                                        @if(isset($firstMarksheet) && isset($firstCourseDetails))
-                                                        <!-- Display First Year Data -->
+                                                        @if(isset($firstMarksheet) && isset($firstSubjectsData))
                                                        
                                                         <div>
                                                             <tr>
@@ -489,89 +489,38 @@
                                                                 <td width="70" align="center" style="font-size:15px; font-family:calibri; border-right:0px #000000 solid; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid;"><strong>Total Marks</strong></td>
                                                                 <td width="66">&nbsp;</td>
                                                             </tr>
-                                                            @php
-                                                            // Initialize totals for all subjects
-                                                            $totalMarksObtained = $totalInternalMarks = $totalMarks2 = $totalMaximumMarks = 0;
-
-                                                            // Helper function for determining grade
-                                                            function getGradeA($percentage) {
-                                                            if ($percentage >= 90) return 'A+';
-                                                            if ($percentage >= 75) return 'A';
-                                                            if ($percentage >= 70) return 'B+';
-                                                            if ($percentage >= 60) return 'B';
-                                                            if ($percentage >= 50) return 'C+';
-                                                            if ($percentage >= 40) return 'C';
-                                                            if ($percentage >= 32) return 'D+';
-                                                            if ($percentage >= 20) return 'D';
-                                                            return 'E';
-                                                            }
-                                                            @endphp
-                                                            
-                                                            @php                                                                    
-                                                                $totalMarksObtained = 0;
-                                                                $totalInternalMarks = 0;
-                                                                $totalMarks1 = 0;  // Initialize $totalMarks1
-                                                                $totalMaximumMarks = 0;
-                                                             @endphp
-
-                                                            @foreach($firstCourseDetails as $course)
-                                                            @foreach ($course->subjects as $index => $subject)
-                                                            @php
-                                                            // Retrieve subject data dynamically
-                                                            $subjectData = $firstSubjectsData[$index] ?? [];
-                                                            $marksObtained = $subjectData['marks_obtained'] ?? 0;
-                                                            $internalMarks = $subjectData['internal_marks'] ?? 0;
-                                                            $maximumMarks = $subject->maximum_marks ?? 0;
-                                                            $totalMarks = $marksObtained + $internalMarks;
-
-                                                            // Sum up total marks for calculations
-                                                            $totalMarksObtained += $marksObtained;
-                                                            $totalInternalMarks += $internalMarks;
-                                                            $totalMarks1 += $totalMarks;
-                                                            $totalMaximumMarks += $maximumMarks;
-
-                                                            // Calculate percentage and grade
-                                                            $percentage = $maximumMarks > 0 ? ($totalMarks / $maximumMarks) * 100 : 0;
-                                                            $grade = getGradeA($percentage);
-                                                            @endphp
-
+                                                          
+                                                            @foreach($firstSubjectsData as $subject)
                                                             <tr height="30">
                                                                 <td width="55" height="20">&nbsp;</td>
                                                                 <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:2px #000000 solid;">
-                                                                    <strong>{{ $subject->subject_code }}</strong>
+                                                                    <strong>{{ $subject['subject_code'] }}</strong>
                                                                 </td>
                                                                 <td style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid;">
-                                                                    <strong>{{ $subject->subject_name }}</strong>
+                                                                    <strong>{{ $subject['subject_name'] }}</strong>
                                                                 </td>
                                                                 <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid;">
-                                                                    <strong>{{ $marksObtained }}</strong>
+                                                                    <strong>{{ $subject['marks_obtained'] }}</strong>
                                                                 </td>
                                                                 <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid;">
-                                                                    <strong>{{ $internalMarks }}</strong>
+                                                                    <strong>{{ $subject['internal_marks'] }}</strong>
                                                                 </td>
                                                                 <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid;">
-                                                                    <strong>{{ $totalMarks }}</strong>
+                                                                    <strong>{{ $subject['total_marks'] }}</strong>
                                                                 </td>
                                                                 <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid;">
-                                                                    <strong>{{ $subject->minimum_marks ?? 'Not Available' }}</strong>
+                                                                    <strong>{{ $subject['minimum_marks'] }}</strong>
                                                                 </td>
                                                                 <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid;">
-                                                                    <strong>{{ $maximumMarks }} </strong>
+                                                                    <strong>{{ $subject['maximum_marks'] }} </strong>
                                                                 </td>
                                                                 <td align="center" style="font-size:17px; border-right:2px #000000 solid; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid;">
-                                                                    <strong>{{ $grade }}</strong>
+                                                                    <strong>{{ $subject['grade'] }}</strong>
                                                                 </td>
                                                                 <td width="55">&nbsp;</td>
                                                             </tr>
                                                             @endforeach
-                                                            @endforeach
 
-                                                            @php
-                                                            // Calculate total percentage and grade
-                                                            $totalPercentage = $totalMaximumMarks > 0 ? ($totalMarks1 / $totalMaximumMarks) * 100 : 0;
-                                                            $formattedPercentage = number_format($totalPercentage, 2);
-                                                            $totalGrade = getGradeA($totalPercentage);
-                                                            @endphp
 
                                                             <tr height="30">
                                                                 <td width="55" height="20">&nbsp;</td>
@@ -608,13 +557,16 @@
                                                                 <td align="center" colspan="3" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:2px #000000 solid; border-left:2px #000000 solid; border-bottom:2px #000000 solid;">Result</td>
                                                                 <td align="center" colspan="2" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:2px #000000 solid; border-left:2px #000000 solid; border-bottom:2px #000000 solid;">Pass</td>
                                                                 <td align="center" colspan="2" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:2px #000000 solid; border-left:2px #000000 solid; border-bottom:2px #000000 solid;">Percentage</td>
-                                                                <td align="center" style="font-size:17px; border-right:2px #000000 solid; font-family:calibri; font-weight:bold; padding:2px; border-top:2px #000000 solid; border-left:1px #000000 solid; border-bottom:2px #000000 solid;"><strong>{{$formattedPercentage}}%</strong></td>
+                                                                <td align="center" style="font-size:17px; border-right:2px #000000 solid; font-family:calibri; font-weight:bold; padding:2px; border-top:2px #000000 solid; border-left:1px #000000 solid; border-bottom:2px #000000 solid;"><strong>{{ $totalPercentage }}%</strong></td>
                                                                 <td width="55">&nbsp;</td>
                                                             </tr>
 
                                                         </div>
 
                                                         @endif
+
+
+
 
                                                         @if(isset($secondMarksheet) && isset($secondCourseDetails))
                                                         <!-- Display Second Year Data -->
@@ -760,51 +712,103 @@
 
                                                        
 
-
                                                         <tr height="30">
-                                                                <td width="65" height="20">&nbsp;</td>
-                                                                <td colspan="10" align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; text-align:center;">AGGREGATE MARKS</td>
-                                                                <td style="font-size:20px; font-family:calibri; font-weight:bold;;"></td>
-                                                                <td width="66">&nbsp;</td>
-                                                            </tr>
-                                                        <tr height="30">
-                                                                <td width="65" height="20">&nbsp;</td>
-                                                                <td width="30" align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:2px #000000 solid;"><strong>Year/Semester</strong></td>
-                                                                <td width="300" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid;"><strong>First</strong></td>
-                                                                <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid;"><strong>Second</strong></td>
+    <td width="65" height="20">&nbsp;</td>
+    <td colspan="10" align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; text-align:center;">AGGREGATE MARKS</td>
+    <td style="font-size:20px; font-family:calibri; font-weight:bold;"></td>
+    <td width="66">&nbsp;</td>
+</tr>
+<tr height="30">
+    <td width="65" height="20">&nbsp;</td>
+    <td width="30" align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:2px #000000 solid;"><strong>Year/Semester</strong></td>
+    <td width="300" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid;"><strong>First</strong></td>
+    <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid;"><strong>Second</strong></td>
+    <td align="center" colspan="3" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid;"><strong>Grand Total</strong></td>
+    <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid;"><strong>Result</strong></td>
+    <td align="center" style="font-size:17px; font-family:calibri; border-right:2px #000000 solid; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid;"><strong>D/G</strong></td>
+    <td width="55">&nbsp;</td>
+</tr>
+
+<tr height="30">
+    <td width="65" height="27">&nbsp;</td>
+    <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:2px #000000 solid;"><strong>Max. Marks</strong></td>
+    <td style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid;">
+        <strong>{{ $firstTotalMaximumMarks }}</strong>
+    </td>
+    <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid;">
+        <strong>{{ $totalMaximumMarks }}</strong>
+    </td>
+    <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid;" colspan="3">
+        <strong>{{ $firstTotalMaximumMarks + $totalMaximumMarks }}</strong>
+    </td>
+    <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid; border-bottom:1px #000000 solid;" rowspan="2">
+        <strong>Pass</strong>
+    </td>
+    <td align="center" style="font-size:17px; font-family:calibri; border-right:2px #000000 solid; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid; border-bottom:1px #000000 solid;" rowspan="2">
+        <strong>1st/ B+ </strong>
+    </td>
+</tr>
+
+<tr height="20" style="border-bottom:1px solid #000">
+    <td width="65" height="27">&nbsp;</td>
+    <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:2px #000000 solid; border-bottom:1px #000000 solid;">
+        <strong>Marks</strong>
+    </td>
+    <td style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid; border-bottom:1px #000000 solid;">
+        <strong>{{ $totalMarks1 ?? '00' }}</strong>
+    </td>
+    <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid; border-bottom:1px #000000 solid;">
+        <strong>{{ $totalMarks2 }}</strong>
+    </td>
+    <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid; border-bottom:1px #000000 solid; width:200px" colspan="3">
+        <strong>{{ $totalMarks1 + $totalMarks2 }}</strong>
+    </td>
+</tr>
+
+<?php
+// Calculate Grand Total and Percentage
+$grandTotal = $totalMarks1 + $totalMarks2;
+$maxMarks = $firstTotalMaximumMarks + $totalMaximumMarks;
+$percentage = ($grandTotal / $maxMarks) * 100;
+
+// Determine Division
+if (round($percentage) >= 60) {
+    $division = '1st';
+} elseif (round($percentage) >= 50) {
+    $division = '2nd';
+} else {
+    $division = ''; // You can set a default division here if needed, e.g. '3rd'
+}
+
+// Determine Grade based on the percentage
+if ($percentage >= 90 && $percentage <= 100) {
+    $grade = 'A+';
+} elseif ($percentage >= 75 && $percentage <= 89) {
+    $grade = 'A';
+} elseif ($percentage >= 70 && $percentage <= 74) {
+    $grade = 'B+';
+} elseif ($percentage >= 60 && $percentage <= 69) {
+    $grade = 'B';
+} elseif ($percentage >= 50 && $percentage <= 59) {
+    $grade = 'C+';
+} elseif ($percentage >= 49 && $percentage <= 40) {
+    $grade = 'C';
+} elseif ($percentage >= 39 && $percentage <= 33) {
+    $grade = 'D+';
+} elseif ($percentage >= 32 && $percentage <= 20) {
+    $grade = 'D';
+} elseif ($percentage >= 19 && $percentage <= 1) {
+    $grade = 'E';
+} else {
+    $grade = 'Invalid'; // In case of invalid percentage range (if the percentage is below 0)
+}
 
 
-                                                                <td align="center" colspan="3" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid;"><strong>Grand Total</strong></td>
-                                                                <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid;"><strong>Result</strong></td>
-                                                                <td align="center" style="font-size:17px; font-family:calibri; border-right:2px #000000 solid; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid;"><strong>D/G</strong></td>
-                                                                <td width="55">&nbsp;</td>
-                                                            </tr>
 
-                                                            <tr height="30">
-                                                                <td width="65" height="27">&nbsp;</td>
-                                                                <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:2px #000000 solid;"><strong>Max. Marks</strong></td>
-                                                                <td style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid;"><strong>{{ $firstTotalMaximumMarks ?? '01' }}
+?>
 
-                                                                </strong></td>
-                                                                <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid;"><strong>{{ $totalMaximumMarks }}</strong></td>
 
-                                                                <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid;" colspan="3"><strong>1400</strong></td>
-                                                                <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid; border-bottom:1px #000000 solid;" rowspan="2"><strong>Pass</strong></td>
-                                                                <td align="center" style="font-size:17px; font-family:calibri; border-right:2px #000000 solid; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid; border-bottom:1px #000000 solid;" rowspan="2"><strong>
-                                                                        1st/
-                                                                        B+ </strong></td>
-                                                            </tr>
 
-                                                            <tr height="20" style="border-bottom:1px solid #000">
-                                                                <td width="65" height="27">&nbsp;</td>
-                                                                <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:2px #000000 solid; border-bottom:1px #000000 solid;"><strong>Marks</strong></td>
-                                                                <td style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid; border-bottom:1px #000000 solid;"><strong> {{ $totalMarks1 ?? '02' }}
-                                                                </strong></td>
-                                                                <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid; border-bottom:1px #000000 solid;"><strong>{{ $totalMarks2 }}</strong></td>
-
-                                                                <td align="center" style="font-size:17px; font-family:calibri; font-weight:bold; padding:2px; border-top:1px #000000 solid; border-left:1px #000000 solid; border-bottom:1px #000000 solid; width:200px" colspan="3"><strong>1015</strong></td>
-
-                                                            </tr>
 
 
                                                         @endif
